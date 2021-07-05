@@ -5,7 +5,7 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 
 
-#Include alt-ime-ahk.ahk
+#Include ../../alt-ime-ahk/alt-ime-ahk.ahk
 #Include my-launcher.ahk
 #Include my-keybind.ahk
 
