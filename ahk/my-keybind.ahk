@@ -1,19 +1,30 @@
 ﻿#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 ; #Warn  ; Enable warnings to assist with detecting common errors.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+;SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+;SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 
 ; ^ Ctrl
 ; ! Alt
 ; # Windows
 ; + Shift
 
-;; {{{ functions for keybind
+;; {{{ functions for keybind : thanks to emacs-ahk
 kill_line()
 {
     global
     Send +{End}
     Send ^c{Del}
+}
+
+yank()
+{
+    ; Convert any copied files, HTML, or other formatted text to plain text
+    Clipboard = %Clipboard%
+
+    ; Paste by pressing Ctrl+V
+    SendInput, ^v
+;clipboard = %clipboard%					;テキスト以外の形式をテキストに変換
+ ;       Send ^v
 }
 
 ;; }}}
@@ -84,7 +95,7 @@ kill_line()
         Send ^{Tab}
     }
     Return
-!^Left:: ; タブ移動（右手用）
+>!>^Left:: ; タブ移動（右手用）
     if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, Matlab, Excel
         Send ^{PgUp}
     }
@@ -92,7 +103,7 @@ kill_line()
         Send ^+{Tab}
     }
     Return
-!^Right:: ; タブ移動（右手用）
+>!>^Right:: ; タブ移動（右手用）
     if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
         Send ^{PgDn}
     }
@@ -144,6 +155,9 @@ kill_line()
     Return
 !v:: ; paste
     Send ^v
+    Return
+!+v:: ; paste
+    yank()
     Return
 !w:: ; close tab
     if (WinActive("ahk_class XLMAIN") or WinActive("ahk_class OpusApp")) { ; Excel
