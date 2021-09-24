@@ -1,5 +1,5 @@
 #! /bin/zsh +x
-ODHOME=OneDrive\ -\ tcu.ac.jp
+ODHOME=Documents/GitHub/config
 # $IP=`/sbin/ifconfig                                    | # ifconfigコマンド実行
 #grep inet[^6]                                     | # IPv4アドレスの行を抽出
 #sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' | # IPv4アドレス文字列だけ抽出
@@ -44,9 +44,9 @@ IP=${${${IP/192.168.9./true}%e*}#*t}
 kako=`kakoIP`
 if [ $IP = "ru" ]; then
     echo `hostname`
-	~/$ODHOME/Setting/bin/sync $Options "$kako:$CDIR" "$CDIR"
+	~/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
 else
     echo "outside"
 #	~/bin/sync $@ "$CDIR" "yanase.$icloud:$CDIR"
-	~/$ODHOME/Setting/bin/sync $Options "$kako:$CDIR" "$CDIR"
+	~/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
 fi
