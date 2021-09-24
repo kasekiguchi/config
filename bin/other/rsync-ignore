@@ -1,0 +1,69 @@
+*.eml
+old*
+backup
+Skip
+.DS_Store
+*~
+*.bak
+*.o
+*.aux
+*.blg
+*.log
+*.bbl
+*.tmp
+._*
+*.fls
+*.fdb_latexmk
+*.synctex.gz*
+*_history
+Metadata Backup
+.svn
+.git
+Virtual*
+id_dsa*
+*.dSYM
+Thumbnails
+svn
+.#*
+~*
+mgplot-*
+
+# https://github.com/sue445/dotfiles/blob/master/_gitignoreq
+# editor cache
+*.swp
+*.orig
+*.un~
+
+# OS cache file
+.DS_Store
+Thumbs.db
+
+# IDE meta data
+## IntelliJ
+.idea/
+out/
+*.iml
+*.ipr
+*.iws
+
+## Eclipse
+.settings/
+.classpath
+.project
+
+## gradle
+.gradle/
+build/
+
+# Excel temp file
+~$*
+
+# Ruby
+vendor/bundle/
+.bundle/
+
+## rbenv
+.ruby-version
+
+# LibreOffice temp file
+.~lock.*#

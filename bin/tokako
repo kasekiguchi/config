@@ -1,0 +1,62 @@
+#! /bin/zsh
+# カレントディレクトリに特化したrsync同期
+
+# $IP=`/sbin/ifconfig                                    | # ifconfigコマンド実行
+#grep inet[^6]                                     | # IPv4アドレスの行を抽出
+#sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' | # IPv4アドレス文字列だけ抽出
+#grep -v '^127\.'                                  | # lookbackを除去
+#grep -v '^10\.'                                   | # private(classA)除去
+#grep -v '^172\.\(1[6-9]\|2[0-9]\|3[01]\)\.'       | # private(classB)除去
+#grep -v '^192\.168\.'                             | # private(classC)除去
+#grep -v '^169\.254\.'                               # link local除去
+#`
+#CDIR=`pwd`
+#~/bin/sync $@ "$CDIR" "yanase.local:$CDIR"
+#source ~/Setting/zsh/zsh_alias
+
+# IP=`ifconfig  | grep -v inet6 | grep inet  | sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' | grep -v '^127\.' `
+# #source ~/Setting/zsh/zsh_alias
+# {{{ options
+ODHOME=OneDrive\ -\ tcu.ac.jp
+
+Options=""
+if [ $# -ge 1 ]; then
+PRINT="true"
+for i in $@
+do
+#echo $i
+    case "$i" in
+	-v)
+	    kakoIP -v
+	    Options=("-v" ${Options[@]})
+	    ;;
+	*verbose)
+	    kakoIP -v
+	    Options=("-v" ${Options[@]})
+	    ;;
+	*delete*)
+	    Options=("--delete" ${Options[@]})
+	    ;;
+	*)
+#	    Options=(${Options[@]} $i)
+	    ;;
+    esac
+done
+fi
+# }}}
+CDIR=`pwd | perl -pe 's;/mnt/c;;g'`
+
+# echo ${IP}
+# IP=${${${IP/192.168.9./true}%e*}#*t}
+# # 192.168.121をtrue に置き換えe以降t以前を削除するのでlocal の場合IP = "ru"となる
+# if [ $IP = "ru" ]; then
+#     echo `hostname`
+# 	~/bin/sync $@ "$CDIR" "kako.local:$CDIR"
+# else
+#     echo "outside"
+# 	~/bin/sync $@ "$CDIR" "kasekiguchi.clear-net.jp:$CDIR"
+# fi
+#
+if [ $PRINT ];then echo "Options : " ${Options[@]} ; fi
+echo $CDIR
+~/$ODHOME/Setting/bin/sync $Options "$CDIR" `~/$ODHOME/Setting/bin/kakoIP`":$CDIR"
