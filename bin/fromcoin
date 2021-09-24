@@ -1,0 +1,49 @@
+#! /bin/zsh +x
+
+ODHOME=OneDrive\ -\ tcu.ac.jp
+Options=""
+DIR=(`cat ~/$ODHOME/Setting/other/normalcoin.txt`)
+if [ $# -ge 1 ]; then
+for i in $@
+do
+    case "$i" in
+	all)
+	DIR=(`cat ~/$ODHOME/Setting/other/allcoin.txt`)
+	    ;;
+	verbose)
+	    Options="$Options verbose"
+	    ;;
+	delete)
+	    Options="delete $Options"
+	    ;;
+	*)
+	    Options="$Options verbose"
+	    ;;
+    esac
+done
+fi
+#echo $DIR
+for DIR0 in $DIR
+do
+#    DIR=`echo $DIR0 | perl -pe "s/_/\\\\\\\\ /g"`
+  dir=`eval echo ~/$DIR0`
+  cd $dir
+    command="/Users/sekiguchi/$ODHOME/Setting/bin/fromkako $Options"
+    if echo $Options | grep verbose > /dev/null; then
+      echo ""
+      echo "=============================================================="
+     fi
+	echo $command
+    /Users/sekiguchi/$ODHOME/Setting/bin/fromkako $@
+	#/Users/sekiguchi/$ODHOME/Setting/bin/fromkako $Options[@]
+done
+
+# echo -n "sync Office? (y/n): "
+# read yn
+# if [ "${yn}" = "Y" -o "${yn}" = "y" ]; then
+#     cd ~/Office
+#     ~/bin/toyanase
+#     echo "cd ~/Office; ~/bin/toyanase"
+# fi
+#	    Dirs=("private" "bin" "Setting" "Office" "Thesis" "Documents/Mathematica" "Documents/Illustrator" "Documents/matx" "Documents/Arduino" "Documents/Books" "Documents/MATLAB" "Documents/Physics" "Documents/Processing" "Documents/conception" "Documents/references" "Documents/tex" "Documents/conferences" "")
+#    Dirs=("Office" "Thesis")

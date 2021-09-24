@@ -135,6 +135,9 @@ yank()
 ^k:: ; kill line
     kill_line()
     Return
+^n:: ; next line
+    Send {Down}
+    Return
 <^q:: ; scroll down
     Send {Down}
     Return
@@ -146,10 +149,10 @@ yank()
     Return
 !s:: ; save
     Send ^s
-    Return
-^s:: ; search
-    Send ^f
-    Return
+    Return 
+;^s:: ; search 
+;    Send ^f
+;    Return
 !t:: ; new tab
     Send ^t
     Return
