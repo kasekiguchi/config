@@ -1,8 +1,8 @@
 #! /bin/zsh +x
 
-ODHOME=OneDrive\ -\ tcu.ac.jp
+ODHOME=Documents/GitHub/config
 Options=""
-Dirs=(`cat ~/$ODHOME/Setting/other/normalcoin.txt`)
+Dirs=(`cat ~/$ODHOME/other/normalcoin.txt`)
 echo $Dirs
 if [ $# -ge 1 ]; then
 argv=$@
@@ -10,7 +10,7 @@ for i in $argv
 do
     case "$i" in
 	all)
-    Dirs=(`cat ~/$ODHOME/Setting/other/allcoin.txt`)
+    Dirs=(`cat ~/$ODHOME/other/allcoin.txt`)
 	  #  Dirs=(".atom" "Library/Mathematica/Autoload" "bin" "Setting" "Office" "Thesis" "Documents/Mathematica" "Documents/Illustrator" "Documents/matx" "Documents/Arduino" "Documents/Books" "Documents/MATLAB" "Documents/Processing" "Documents/Score" "Documents/conception" "Documents/references" "Documents/conferences" "Documents/tex")
 	    ;;
 	*verbose)
@@ -24,8 +24,8 @@ done
 fi
 echo $Options
 #  if [ `hostname` = "kako.local" ]; then
-#  if [ -f ~/$ODHOME/Setting/logs/coindelete.log ]; then
-#      cat ~/$ODHOME/Setting/logs/coindelete.log
+#  if [ -f ~/$ODHOME/logs/coindelete.log ]; then
+#      cat ~/$ODHOME/logs/coindelete.log
 #  else
 #      echo "from [01;33mkako[22;24;37;49m to other PC"
 #      for DIR0 in $Dirs
@@ -33,7 +33,7 @@ echo $Options
 #     #DIR= `perl -pe "s/_/\ /g" $DIR`
 #     dir=`eval echo ~/$DIR0`
 #     cd $dir
-#  	  command="~/$ODHOME/Setting/bin/toother $Options"
+#  	  command="~/$ODHOME/bin/toother $Options"
 #  	if echo $Options | grep "[\-]v" > /dev/null; then
 #  	    echo ""
 #  	    echo "=============================================================="
@@ -42,10 +42,10 @@ echo $Options
 #      done
 #  fi
 #  else
-#  #cd ~/Setting/logs/
+#  #cd ~/logs/
 #  #~/bin/fromkako
-#  #if [ -f ~/Setting/logs/coindelete.log ]; then
-#  #    cat ~/Setting/logs/coindelete.log
+#  #if [ -f ~/logs/coindelete.log ]; then
+#  #    cat ~/logs/coindelete.log
 #  #else
     echo "from " `hostname` " to [01;33mkako[22;24;37;49m"
     for DIR0 in $Dirs
@@ -53,13 +53,13 @@ echo $Options
 #    # DIR=`echo $DIR0 | perl -pe "s/_/\\\\\\\\ /g"`
       dir=`eval echo ~/$DIR0`
       cd $dir
-#      command="~/$ODHOME/Setting/bin/tokako $Options"
+#      command="~/$ODHOME/bin/tokako $Options"
 #  	   if echo $Options | grep "[\-]v" > /dev/null; then
 #  	      echo ""
 #  	       echo "=============================================================="
 #  	   fi
 #  	   eval $command
-  	   /Users/sekiguchi/$ODHOME/Setting/bin/tokako $Options
+  	   /Users/sekiguchi/$ODHOME/bin/tokako $Options
     done
 #  #fi
 #  fi
