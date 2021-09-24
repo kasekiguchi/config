@@ -1,0 +1,85 @@
+#! /bin/zsh +x
+ODHOME=~/OneDrive\ -\ tcu.ac.jp
+source $ODHOME/Setting/zsh/zsh_alias
+OPTIONS=("")
+VERBOSE=false
+
+
+#while [ -n "$(echo -e $1 | grep -v yanase | grep '-')" ] || [ $1 = "-e" ]
+while [ -n "$(echo $1 | grep -v kasekiguchi | grep '-')" ]
+do
+    if [ $1 = "-v" ]; then
+	VERBOSE=true
+	OPTIONS=(${OPTIONS[@]} $1)
+	shift
+	elif [ $1 = "-s" ]; then
+	OPTIONS=(${OPTIONS[@]} -e $2)
+	shift 2
+##    fi
+##      if [ $1 = "-s" ]; then
+##  	OPTIONS=(${OPTIONS[@]} "-e ssh")
+##  	shift 2
+##  	echo $OPTIONS
+    else
+	OPTIONS=(${OPTIONS[@]} $1)
+	shift
+    fi
+done
+exitFlag=0
+if [ -z $1 ]; then
+    redecho "require 'FROM' IP or host name"
+	exitFlag=1
+else
+    FROM=$1
+    if [ -z $2 ]; then
+    redecho "require 'TO' IP or host name"
+	exitFlag=1
+    else
+	TO=$2
+    fi
+fi
+if echo $TO | \grep -q :; then
+TO=`echo $TO | perl -pe "s/ /\\\\\\\\ /g"`
+else
+FROM=`echo $FROM | perl -pe "s/ /\\\\\\\\ /g"`
+fi
+
+COMMAND="rsync -azumPH $OPTIONS --exclude-from=\"$ODHOME/Setting/other/rsync-ignore\" \"$FROM/\" \"$TO\"\n"
+
+blueecho "FROM" " = $FROM"
+
+if $VERBOSE ; then
+redecho "TO"  "   =  $TO"
+greenecho "OPTIONS" " = $OPTIONS"
+echo $COMMAND
+fi
+if [ $exitFlag = 1 ]; then
+exit
+fi
+if $VERBOSE ; then
+ rsync -azumPH $OPTIONS --exclude-from="$ODHOME/Setting/other/rsync-ignore" "$FROM/"  "$TO"
+else
+ rsync -azumPH $OPTIONS --exclude-from="$ODHOME/Setting/other/rsync-ignore" "$FROM/"  "$TO" >> ~/.Trash/rsync_tmp
+
+#if [ ! `grep deleting` ]; then
+#perl -pe 's/\/Users\/sekiguchi/~/g' | perl -pe 's/\.\///' | perl -pe 's/[\W\S
+#]*files\ to\ consider//' | perl -pe 's/^building\ file\ list.*//' | perl -pe 's/^sent.*bytes\/sec$//' | perl -pe 's/^total\ size\ is.*$//' | perl -pe 's/receiving\ file\ list.*$//' | perl -pe 's/[\w\s]*files.*$//g' | perl -pe 's/^\s*$//'
+#else
+#echo $?
+#fi
+# いろいろやったが，rsync で各項目の進捗表示をするのは無理ということがわかった．
+
+
+cat ~/.Trash/rsync_tmp | perl -pe 's/\/Users\/sekiguchi/~/g' | perl -pe 's/\.\///' | perl -pe 's/deleting.*$//g' | perl -pe 's/[\W\S
+]*files\ to\ consider//' | perl -pe 's/^building\ file\ list.*$//' | perl -pe 's/^sent.*bytes\/sec$//' | perl -pe 's/^total\ size\ is.*$//' | perl -pe 's/receiving\ file\ list.*$//' | perl -pe 's/[\w\s]*files.*$//g' | perl -pe 's/^\s*$//'
+
+cat ~/.Trash/rsync_tmp | grep deleting
+if [ ! $? -eq 1 ]; then
+    cat ~/.Trash/rsync_tmp | grep deleting > ~/.Trash/rsync_delete
+#    scp ~/.Trash/rsync_delete kasekiguchi.clear-net.jp:/Network/Servers/yanase.local/Volumes/drobo/Users/sekiguchi/bin
+fi
+
+fi
+
+rm -f ~/.Trash/rsync_tmp
+rm -f ~/.Trash/rsync_delete
