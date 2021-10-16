@@ -17,11 +17,11 @@ do
 echo $i
     case "$i" in
 	-v)
-	    kakoIP -v
+#	    kakoIP -v
 	    Options=("-v" ${Options[@]})
 	    ;;
 	*verbose)
-	    kakoIP -v
+#	    kakoIP -v
 	    Options=("-v" ${Options[@]})
 	    ;;
 	*delete*)
@@ -41,12 +41,13 @@ CDIR=`pwd | perl -pe 's;/mnt/c;;g'`
 echo ${IP}
 IP=${${${IP/192.168.9./true}%e*}#*t}
 # 192.168.121をtrue に置き換えe以降t以前を削除するのでlocal の場合IP = "ru"となる
-kako=`kakoIP`
+#kako=`kakoIP`
+kako="kmhome.aa0.netvolante.jp"
 if [ $IP = "ru" ]; then
     echo `hostname`
-	~/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
+	/mnt/c/Users/sekiguchi/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
 else
     echo "outside"
 #	~/bin/sync $@ "$CDIR" "yanase.$icloud:$CDIR"
-	~/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
+	/mnt/c/Users/sekiguchi/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
 fi
