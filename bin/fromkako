@@ -1,5 +1,5 @@
 #! /bin/zsh +x
-ODHOME=Documents/GitHub/config
+ODHOME=/Users/sekiguchi/Documents/GitHub/config
 # $IP=`/sbin/ifconfig                                    | # ifconfigコマンド実行
 #grep inet[^6]                                     | # IPv4アドレスの行を抽出
 #sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' | # IPv4アドレス文字列だけ抽出
@@ -45,9 +45,9 @@ IP=${${${IP/192.168.9./true}%e*}#*t}
 kako="kmhome.aa0.netvolante.jp"
 if [ $IP = "ru" ]; then
     echo `hostname`
-	/mnt/c/Users/sekiguchi/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
+	$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
 else
     echo "outside"
 #	~/bin/sync $@ "$CDIR" "yanase.$icloud:$CDIR"
-	/mnt/c/Users/sekiguchi/$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
+	$ODHOME/bin/sync $Options "$kako:$CDIR" "$CDIR"
 fi

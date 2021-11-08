@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "C:\\Users\\sekiguchi\\Office\\tcu\\lecture\\Experiment2"
+		}
+	],
+	"settings": {
+		"latex-workshop.view.pdf.external.viewer.command": "C:/Program Files/SumatraPDF/SumatraPDF.exe",
+		"latex-workshop.view.pdf.external.viewer.args": [
+			"-reuse-instance",
+			"%PDF%"
+		]
+	}
+}

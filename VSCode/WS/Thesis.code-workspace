@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": "/Users/sekiguchi/Thesis"
+		},
+		{
+			"path": "C:/Users/sekiguchi/OneDrive - tcu.ac.jp/LAB/Paper/SICE_Journal/Endo_journal"
+		},
+		{
+			"path": "C:/Users/sekiguchi/OneDrive - tcu.ac.jp/Paper"
+		},
+		{
+			"path": "C:/Users/sekiguchi/OneDrive - tcu.ac.jp/Documents/tex/Extension"
+		},
+		{
+			"path": "C:/Users/sekiguchi/svn/JOURNAL_odashima"
+		},
+		{
+			"path": "C:/Users/sekiguchi/svn/JOURNAL_kasahara"
+		}
+	],
+	"settings": {
+		"latex-workshop.view.pdf.external.viewer.command": "C:/Program Files/SumatraPDF/SumatraPDF.exe",
+		"latex-workshop.view.pdf.external.viewer.args": [
+			"-reuse-instance",
+			"%PDF%"
+		]
+	}
+}

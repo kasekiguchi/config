@@ -37,7 +37,8 @@ return
 
 ^!s::
 ;Launch("chrome.exe","C:\Program Files (x86)\Google\Chrome\Application\chrome.exe")
-Launch("chrome.exe","C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome")
+Launch("chrome.exe","C:\Program Files\Google\Chrome\Application\chrome.exe")
+;"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome")
 return
 
 ^!l::

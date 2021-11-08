@@ -1,7 +1,7 @@
 #! /bin/zsh
 tmpIP=(`ifconfig | grep broadcast`)
 IP=${tmpIP[1]}
-echo "1 : clear-net\t 2: icloud \t 3 : local"
+echo "1 : netvolante\t 2: icloud \t 3 : local"
 #kako=kasekiguchi.clear-net.jp
 kako=kmhome.aa0.netvolante.jp
 case $1 in 

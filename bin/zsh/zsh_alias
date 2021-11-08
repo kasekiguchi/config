@@ -1,0 +1,317 @@
+case ${OSTYPE} in
+    Darwin)
+#	    alias gls="gls --color"
+	    alias -s pdf=open
+alias   ls='/bin/ls -FGv' #/bin/ls の設定
+#alias   ls='ls -F --color=tty'
+#	    alias   ls='gls -Fh'
+	    alias   sl='ls -FGv'
+	    alias   ll='ls -lah'
+	    alias   la='ls -aGv'
+	    alias grep='grep -s --color=always '
+	    alias lgrep-r="find . -type d -name .svn -prune -o -type f -print | xargs lgrep"
+	    alias quick='qlmanage -p'  #quick look
+	    alias ql='qlmanage -p'  #quick look
+	    alias -- firefox='open -a Firefox.app'
+	    alias -- Inkscape='open -a Inkscape.app'
+
+	    ;;
+    *)
+	    alias -s pdf=acroread
+	    alias   ls='ls --color=auto'
+	    alias   sl='ls'
+	    alias   ll='ls -alF'
+	    alias   la='ls -A'
+	    alias   l='ls -CF'
+	    alias grep='grep -s --color=auto '
+	    alias lgrep-r="find . -type d -name .svn -prune -o -type f -print | xargs lgrep"
+	    alias fgrep='fgrep --color=auto'
+	    alias egrep='egrep --color=auto'
+	;;
+esac
+
+#alias fuck='$(thefuck $(fc -ln -1))'
+
+alias svn='colorsvn'
+
+alias o='openfile '
+alias	gd='dirs -v; echo -n "select number: "; read newdir; cd -"$newdir"'
+alias	-g L='| less' 
+alias	-g G='| grep'
+alias	-g X='| xgraph'
+
+
+alias   rm='rm -i'
+alias   cp='cp -i'
+alias   eng='export LANG=C LANGUAGE=C LC_ALL=C'	# May be not neccesary
+alias mv='mv -i'
+alias x='exit'
+alias h='history'
+alias    Elclean='rm -f *.elc'
+alias -- Clean='rm -f *.*~ .*~ *~'
+alias -- Cleanall='rm -f *.*gf *pk *tfm *.dvi *.aux *.ps *.lot *.lof *.aux *.toc *.log *.tmp *.bbl *.blg *.out *.ind *.ilg *.idx *.tod texput.tex'
+#alias -- Texclean='rm -f *.dvi *.lot *.lof *.aux *.toc *.log *.tmp *.bbl *.blg *.out *.ind *.ilg *.idx *.tod texput.tex dingbat.*'
+alias -- Mclean='rm -f *.mx2 *.mx1 *.lot *.lof *.aux *.toc *.log *.tmp *.bbl *.blg *.out *.ind *.ilg *.idx *.tod *.bat texput.tex dingbat.*'
+alias -- capture='xwd -root > '
+#alias -- cd..='CURRENT=`pwd`; chdir ..; ls'
+#alias -- cd-='BACK=$CURRENT;CURRENT=`pwd`; chdir $BACK;BACK=; ls'
+alias -- countword='ls | wc -w'
+alias -- drawer='inkscape'
+
+alias -- flashplay='gflashplayer'
+#alias -- gnuplot='open /Applications/gnuplot.app'
+alias -- gv='gv -watch'
+#alias -- h='history'
+alias -- longedge='lpr -Psadaie -o Duplex=DuplexNoTumble'
+alias -- myps='ps aux | \grep $USER'
+alias -- one-side='lpr -Psadaie -o Duplex=None'
+alias -- rwho='rwho -a'
+alias -- shortedge='lpr -Psadaie -o Duplex=DuplexTumble'
+alias -- sl='ls -F --color=tty'
+alias -- unlink='~/bin/Unlink'
+#alias -- cp='~/bin/CP'
+alias -- x='exit'
+alias -- path='echo $PATH'
+alias -- kurosawa='rdesktop -u sekiguchi 192.168.60.125'
+
+alias -- emacs='open -a /Applications/Emacs.app $@'
+#alias -- mg=''/Applications/Emacs.app/Contents/MacOS/Emacs -nw'
+#/Applications/MacPorts/Emacs.app/Contents/MacOS/Emacs -l ~/Setting/emacs/dotemacs'
+
+
+alias -- pdvips='dvips'
+alias -- pxdvi='open '
+alias -- music='audacious -p'
+alias -- sshubuntu='ssh -l sekiguchi 192.168.56.101'
+alias -- killubuntu='VBoxManage controlvm "Ubuntu-8.04" savestate'
+
+alias -- macpro='ssh macpro.local'
+#alias -- tezuka='ssh tezuka.local'
+#alias -- smacbook='ssh smacbook.local'
+#alias -- smac='ssh cr2kd6lp.corede.net'
+#alias -- sclicense='ssh sclicense@macpro.local'
+alias -- kitagawa='ssh kitagawa.sc.ctrl.titech.ac.jp'
+alias -- sharaku='ssh 192.168.60.71'
+alias -- toshusai='ssh toshusai.sc.ctrl.titech.ac.jp'
+
+alias -- tahara='ssh 192.168.100.180'
+alias -- hironori='ssh 192.168.100.181'
+alias -- hsuzuki='ssh 192.168.100.182'
+alias -- kato='ssh 192.168.100.170'
+alias -- iguchi='ssh 192.168.100.172'
+alias -- hanai='ssh 192.168.60.171'
+alias -- atsuto='ssh 192.168.60.160'
+alias -- kyohei='ssh 192.168.60.161'
+alias -- fujita='ssh 192.168.60.162'
+
+#alias java='java -Dfile.encoding=UTF-8'
+#alias javac='javac -J-Dfile.encoding=utf-8'
+#alias -- exit='sclicenseExit'
+
+# > colorecho hoge waya  ==> hoge : colored,  waya : default color
+redecho() {echo "[01;31m$1[22;24;37;49m" $2}
+blueecho(){echo "[01;36m$1[22;24;37;49m" $2}
+greenecho(){echo "[01;32m$1[22;24;37;49m" $2}
+# cecho = checked echo : if CECHO is defined then cecho is almost the same "echo"
+cecho(){if $CECHO ; then
+   #/opt/local/libexec/gnubin/
+   echo $@
+fi}
+
+sclicenseExit () {
+    if [ $USER = sclicense ]; then
+	if [ $hostUSER ]; then
+	    cd ~
+	    umount ~/dazai/$hostUSER
+	    if [ `ls ~/dazai/$hostUSER` ]; then
+		echo "Error : unmount error."
+	    else
+		rmdir ~/dazai/$hostUSER
+	    fi
+	    \exit
+	else
+	    echo "Your login is illegal. Please use 'sclicense' command. Ask Sekiguchi for detail."
+	    \exit
+	fi
+    else 
+	\exit
+    fi
+}
+
+sclicense () {
+    ssh -Y sclicense@192.168.60.150 -t "if [ ! -d ~/dazai/$USER ] ; then mkdir ~/dazai/$USER; fi ; sshfs $USER@192.168.60.1:/home/dazai/$USER ~/dazai/$USER;export hostUSER=$USER;/opt/local/bin/zsh"
+}
+if [ $USER = sclicense ]; then 
+    alias -- zsh='echo "Sorry you are not allowed to open new shell"'
+fi
+
+
+#  matlab () {
+#  # enter sclicense password
+#      case ${USER} in
+#  	sekiguchi)
+#  	    echo "enter password of sclicense"
+#  	    su sclicense -c /Applications/MATLAB_R2010b.app/bin/matlab $@
+#  	    ;;
+#  	sclicense)
+#  	    /Applications/MATLAB_R2010b.app/bin/matlab $@
+#  	    ;;
+#      esac
+#  }
+#alias    platex='/opt/local/bin/platex'
+#alias -g grepcolor='GREP_COLOR=$1 grep $2'
+#grepcolor () {
+#'GREP_COLOR=$1 grep --color=always $2'
+#}
+
+#recls : recursive ls
+
+ubuntu () {
+	VBoxManage startvm "Ubuntu-8.04" --type headless
+}
+
+PDFmerge () {
+	gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=$*
+}
+#macの場合
+#/System/Library/Automator/Combine PDF Pages.action/Contents/Resources/join.py --output $*
+#でもできる．
+
+##今西君より
+##alias pst='env TZ=US/Pacific date'
+#cd () {CURRENT=`pwd`; chdir $==*; ls}
+disp () { DISPLAY=$==*\:0.0 ; printenv DISPLAY }
+alias lv="vim --cmd 'let no_plugin_maps = 1' -c 'runtime! macros/less.vim'"
+alias -- less='lv'
+#less () { less -r $==* }
+w3m () { w3m -e $==* }
+function  spot() {command mdfind $==*}  #spotlight
+#function cd {
+#   if builtin cd $1
+#   then
+#     es=$?
+#     ls
+#   else
+#      es=$?
+#      echo "移動できません"
+#   fi
+#   return $es
+#}
+
+
+#function disp() {command setenv DISPLAY $*\:0.0 ; printenv DISPLAY}
+		function xfig() {command xfig -me -portrait -international $* >& /dev/null}
+		function w3m() {command w3m -e $*}
+#function gnuplot() {command gnuplot -bg white $*}
+#function emacs() {command env XMODIFIERS=@im=none emacs &}
+#function inkscape() {command inkscape $* &}
+		function less() {command less -r $*}
+		function e() {command env XMODIFIERS=@im=none emacs --fullscreen $* &}
+		function lprT() {command lpr -P sadaie -o Duplex=DuplexTumble -o number-up=2 $* &}
+function ff() {command firefox $* &}
+function acroread() {command open -a Adobe\ Reader $* &}
+function bu() {
+    if [ ${1#.} != ${1} ]; then
+        command cp -pr ${1} .\~${1#.}.`date +%Y%m%d-%H%M`
+    else
+        command cp -pr ${1} \~${1}.`date +%Y%m%d-%H%M`
+    fi
+}
+function a() {command /Applications/tools/Firefox.app/Contents/MacOS/firefox-bin -remote "openurl(http://eow.alc.co.jp/$*/UTF-8/)" &}
+function cdd {
+    cd "${HOME}/Desktop/"
+    zle reset-prompt
+}
+function cdwww {
+    cd "/home/dazai/www/"
+    zle reset-prompt
+}
+find-grep () { find . -type f -print | xargs grep -s -n --binary-files=without-match $@ }
+
+
+
+#########拡張子判別
+for target in java c h C cpp sh txt xml tex log aux bbl
+do
+ alias -s ${target}=zsh_pager
+done
+
+for target in html xhtml
+do
+ alias -s ${target}=zsh_wevbbrowser
+done
+
+for target in gif jpg jpeg png bmp
+do
+ alias -s ${target}=zsh_imageviewer
+done
+
+for target in mp3 m4a ogg
+do
+ alias -s ${target}=zsh_audioplayer
+done
+
+for target in mpg mpeg avi mp4v
+do
+ alias -s ${target}=zsh_movieplayer
+done
+
+zsh_pager()
+{
+ $(zsh_commandselector "${PAGER} lv less more cat") ${@+"$@"}
+}
+
+zsh_wevbbrowser()
+{
+ $(zsh_commandselector
+  "firefox opera konqueror epiphany less") ${@+"$@"}
+}
+
+zsh_imageviewer()
+{
+ $(zsh_commandselector
+  "gthumb imageviewer gqview kview eog display") ${@+"$@"}
+}
+
+zsh_audioplayer()
+{
+ $(zsh_commandselector
+  "amarok audacious beep-media-player xmms2 xmms noatun") ${@+"$@"}
+}
+
+zsh_movieplayer()
+{
+ $(zsh_commandselector
+  "svlc gmplayer totem xine realplay") ${@+"$@"}
+}
+
+zsh_commandselector()
+{
+ for command in $(echo ${1})
+  do
+   if type "${command}" > /dev/null 2>&1
+   then
+    echo "${command}"
+    break
+   fi
+  done
+}
+
+key()# shell script にすると，実際にcdすることができない．screenを立ち上げているようなもの
+{
+if [ $1 = "list" ]; then
+    lv ~/bin/keywords
+else
+    if [ $# -ge 2 ]; then
+	echo $1	$2 >> ~/bin/keywords
+    else
+	keywordlist=(`/usr/bin/grep $1 ~/bin/keywords`)
+	cd ${keywordlist[2]}
+	echo  ${keywordlist[2]}
+    fi
+fi
+}
+
+hoge()
+{
+cd ~}

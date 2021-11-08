@@ -1,8 +1,8 @@
 #! /bin/zsh +x
 
-ODHOME=Documents/GitHub/config
+ODHOME=/Users/sekiguchi/Documents/GitHub/config
 Options=""
-Dirs=(`cat ~/$ODHOME/other/normalcoin.txt`)
+Dirs=(`cat $ODHOME/other/normalcoin.txt`)
 echo $Dirs
 if [ $# -ge 1 ]; then
 argv=$@
@@ -10,7 +10,7 @@ for i in $argv
 do
     case "$i" in
 	all)
-    Dirs=(`cat ~/$ODHOME/other/allcoin.txt`)
+    Dirs=(`cat $ODHOME/other/allcoin.txt`)
 	  #  Dirs=(".atom" "Library/Mathematica/Autoload" "bin" "Setting" "Office" "Thesis" "Documents/Mathematica" "Documents/Illustrator" "Documents/matx" "Documents/Arduino" "Documents/Books" "Documents/MATLAB" "Documents/Processing" "Documents/Score" "Documents/conception" "Documents/references" "Documents/conferences" "Documents/tex")
 	    ;;
 	*verbose)
@@ -59,7 +59,7 @@ echo $Options
 #  	       echo "=============================================================="
 #  	   fi
 #  	   eval $command
-  	   /Users/sekiguchi/$ODHOME/bin/tokako $Options
+  	   $ODHOME/bin/tokako $Options
     done
 #  #fi
 #  fi

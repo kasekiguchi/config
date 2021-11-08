@@ -1,14 +1,14 @@
 #! /bin/zsh +x
 
-ODHOME=Documents/GitHub/config
+ODHOME=/Users/sekiguchi/Documents/GitHub/config
 Options=""
-DIR=(`cat ~/$ODHOME/other/normalcoin.txt`)
+DIR=(`cat $ODHOME/other/normalcoin.txt`)
 if [ $# -ge 1 ]; then
 for i in $@
 do
     case "$i" in
 	all)
-	DIR=(`cat ~/$ODHOME/other/allcoin.txt`)
+	DIR=(`cat $ODHOME/other/allcoin.txt`)
 	    ;;
 	verbose)
 	    Options="$Options verbose"
@@ -28,14 +28,14 @@ do
 #    DIR=`echo $DIR0 | perl -pe "s/_/\\\\\\\\ /g"`
   dir=`eval echo ~/$DIR0`
   cd $dir
-    command="/Users/sekiguchi/$ODHOME/bin/fromkako $Options"
+    command="$ODHOME/bin/fromkako $Options"
     if echo $Options | grep verbose > /dev/null; then
       echo ""
       echo "=============================================================="
      fi
 	echo $command
-    /Users/sekiguchi/$ODHOME/bin/fromkako $@
-	#/Users/sekiguchi/$ODHOME/bin/fromkako $Options[@]
+    $ODHOME/bin/fromkako $@
+	#$ODHOME/bin/fromkako $Options[@]
 done
 
 # echo -n "sync Office? (y/n): "

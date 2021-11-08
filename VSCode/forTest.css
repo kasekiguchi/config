@@ -1,0 +1,17 @@
+.token.comment,
+.token.blockquot {
+  font-size: 1em;
+  color: #000000;
+  font-weight: bold;
+}
+
+th,
+td {
+  font-size: .4em;
+  padding: .8em;
+  border-radius: 3px;
+  line-height: 1.4;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+

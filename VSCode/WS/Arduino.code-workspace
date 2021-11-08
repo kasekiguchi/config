@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "path": "C:\\Users\\sekiguchi\\OneDrive - tcu.ac.jp\\Documents\\Arduino"
+    },
+    {
+      "path": "..\\..\\..\\..\\Documents\\GitHub\\id_check"
+    },
+    {
+      "path": "..\\..\\..\\..\\Documents\\GitHub\\active_gimbal"
+    }
+  ],
+  "settings": {
+    "files.associations": {
+      "*.m": "matlab",
+      "istream": "cpp",
+      "*.tcc": "cpp"
+    }
+  }
+}

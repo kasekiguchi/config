@@ -1,5 +1,6 @@
 #! /bin/zsh +x 
-source /Users/sekiguchi/OneDrive\ -\ tcu.ac.jp/Setting/zsh/zsh_alias
+source /Users/sekiguchi/Documents/GitHub/config/bin/zsh/zsh_alias
+#/Users/sekiguchi/OneDrive\ -\ tcu.ac.jp/Setting/zsh/zsh_alias
 if [ ! $1 ]; then
     echo "Please input number *** at 192.168.***.###"
     exit

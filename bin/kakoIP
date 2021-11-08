@@ -1,0 +1,54 @@
+#! /bin/zsh
+# $IP=`/sbin/ifconfig                                    | # ifconfigコマンド実行
+#grep inet[^6]                                     | # IPv4アドレスの行を抽出
+#sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' | # IPv4アドレス文字列だけ抽出
+#grep -v '^127\.'                                  | # lookbackを除去
+#grep -v '^10\.'                                   | # private(classA)除去
+#grep -v '^172\.\(1[6-9]\|2[0-9]\|3[01]\)\.'       | # private(classB)除去
+#grep -v '^192\.168\.'                             | # private(classC)除去
+#grep -v '^169\.254\.'                               # link local除去
+#`
+#CDIR=`pwd`
+#~/bin/sync $@ "$CDIR" "yanase.local:$CDIR"
+#source ~/Setting/zsh/zsh_alias
+
+# {{{ options
+
+#GETOPT="/usr/local/Cellar/gnu-getopt/1.1.6/bin/getopt"
+GETOPT="getopt"
+OPTIONS=`$GETOPT -o v --long verbose  --  "$@"`
+eval set -- "$OPTIONS" # eval + "" の組み合わせじゃないと$1にまとめて設定されてしまう．
+while true; do
+    case "$1" in
+	-v)
+	    PRINT="true"
+	    shift
+	    ;;
+	--)
+            shift
+            break
+            ;;
+	*)
+        echo "Internal error!" >&2
+        exit 1
+    esac
+done
+
+# }}}
+
+IP=`ifconfig  | grep -v inet6 | grep inet  | sed 's/.*inet[^6][^0-9]*\([0-9.]*\)[^0-9]*.*/\1/' | grep -v '^127\.' `
+#source ~/Setting/zsh/zsh_alias
+CDIR=`pwd`
+if [ $PRINT ];then echo -n ${IP} ": " ; fi
+IP=${${${IP/192.168.9./true}%e*}#*t}
+# 192.168.9をtrue に置き換えe以降t以前を削除するのでlocal の場合IP = "ru"となる
+if [ $IP = "ru" ]; then
+    if [ $PRINT ];then echo `hostname` ; fi
+    #kakoIP="kako.local"
+    kakoIP="192.168.9.150"
+else
+    if [ $PRINT ];then echo "outside"; fi
+    kakoIP="kmhome.aa0.netvolante.jp"
+fi
+if [ $PRINT ];then echo -n "kako : "; fi
+echo $kakoIP

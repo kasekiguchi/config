@@ -1,0 +1,20 @@
+{
+  "folders": [
+    {
+      "path": "C:\\Users\\sekiguchi\\Office"
+    },
+    {
+      "path": "C:\\Users\\sekiguchi\\OneDrive - tcu.ac.jp\\Setting"
+    },
+    {
+      "path": "..\\..\\..\\..\\private"
+    }
+  ],
+  "settings": {
+    "latex-workshop.view.pdf.external.viewer.command": "C:/Program Files/SumatraPDF/SumatraPDF.exe",
+    "latex-workshop.view.pdf.external.viewer.args": [
+      "-reuse-instance",
+      "%PDF%"
+    ]
+  }
+}

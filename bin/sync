@@ -1,6 +1,6 @@
 #! /bin/zsh +x
-ODHOME=~/OneDrive\ -\ tcu.ac.jp
-source $ODHOME/Setting/zsh/zsh_alias
+ODHOME=/Users/sekiguchi/Documents/GitHub/config
+source $ODHOME/bin/zsh/zsh_alias
 OPTIONS=("")
 VERBOSE=false
 
@@ -44,7 +44,7 @@ else
 FROM=`echo $FROM | perl -pe "s/ /\\\\\\\\ /g"`
 fi
 
-COMMAND="rsync -azumPH $OPTIONS --exclude-from=\"$ODHOME/Setting/other/rsync-ignore\" \"$FROM/\" \"$TO\"\n"
+COMMAND="rsync -azumPH $OPTIONS --exclude-from=\"$ODHOME/other/rsync-ignore\" \"$FROM/\" \"$TO\"\n"
 
 blueecho "FROM" " = $FROM"
 
@@ -57,9 +57,9 @@ if [ $exitFlag = 1 ]; then
 exit
 fi
 if $VERBOSE ; then
- rsync -azumPH $OPTIONS --exclude-from="$ODHOME/Setting/other/rsync-ignore" "$FROM/"  "$TO"
+ rsync -azumPH $OPTIONS --exclude-from="$ODHOME/other/rsync-ignore" "$FROM/"  "$TO"
 else
- rsync -azumPH $OPTIONS --exclude-from="$ODHOME/Setting/other/rsync-ignore" "$FROM/"  "$TO" >> ~/.Trash/rsync_tmp
+ rsync -azumPH $OPTIONS --exclude-from="$ODHOME/other/rsync-ignore" "$FROM/"  "$TO" >> ~/.Trash/rsync_tmp
 
 #if [ ! `grep deleting` ]; then
 #perl -pe 's/\/Users\/sekiguchi/~/g' | perl -pe 's/\.\///' | perl -pe 's/[\W\S
