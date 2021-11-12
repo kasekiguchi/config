@@ -1,0 +1,226 @@
+#! /bin/zsh +x
+# preamble
+ODHOME=~/Documents/GitHub/config/bin
+source "$ODHOME/zsh/zsh_alias"
+#ODHOME=~/OneDrive\ -\ tcu.ac.jp
+#source $ODHOME/Setting/zsh/zsh_alias
+
+if [ $# -le 3 ]; then
+	redecho "Make sure arguments"
+	redecho "makeDatabase d_name t_name xlsx temp/num sql/year
+	d_name : database name
+	t_name : table name
+	xlsx : data file
+	temp : csv template file relates terms of table and xlsx cells
+	num : number of skip line for xlsx
+	sql : sql file defining table : if exist, re-create table
+	year : set target year
+	add : not implemented yet
+	server : make copy of database on server"
+else
+
+	# 引数
+	# makeDatabase databasename table file.xlsx template.csv file.sql
+	pwd=$(pwd)
+	# database name
+	db=$argv[1]
+	# table name
+	table=$argv[2]
+	# data file
+	targ=$argv[3]
+	if [ ${targ##*/} = $targ ]; then
+		xlsx=$pwd/$targ
+	else
+		xlsx=$targ
+	fi
+	blueecho "target file : " $xlsx
+	#### application_name=${argv[3]%.xlsx}
+	# echo $application_name
+	# List of "key,value position\n"
+	# or number of skip for xlsx load
+	targ=$argv[4]
+	if [ ${targ##*/} = $targ ]; then
+		template=$pwd/$targ
+	else
+		template=$targ
+	fi
+	#echo $template
+	if [ ! -e $argv[4] ]; then # $argv[4]というファイルが存在するか判別
+		# 存在しない場合
+		# ただの数字の場合 スキップする行数を表す．
+		# verticalの場合，各行が mysql_column_name, 値 という形をしている
+		echo $argv[4] >rm-template.csv
+		template=$pwd/rm-template.csv
+		template=rm-template.csv
+		template_flag="false"
+	else
+		redecho "with template file"
+		template_flag="true"
+	fi
+
+	if [ ! -z $argv[5] ]; then # argv[5] = definition of structure of database table
+		# {{{ recreate database
+		targ=$argv[5]
+		if [ ${targ%%.*} = $targ ]; then # $argv[5] = year
+			year=$targ 
+		else
+		if [ ${targ##*/} = $targ ]; then
+			sql=$pwd/$targ
+		else
+			sql=$targ
+		fi
+		echo "レコード削除"
+		mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "truncate table $table;"
+
+		echo "テーブル削除"
+		mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "drop table $table;"
+
+		echo "新規テーブル作成"
+		mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi <$sql
+		# }}}
+		fi
+	fi
+
+	if [[ $(cat $template) =~ ^[0-9]+$ ]]; then
+		skip=$(cat $template)
+		echo "skip" $skip
+	else
+		if [ "vertical" != "$(cat $template)" ]; then
+			keys=$(cut -d ',' -f 1 $template | perl -p -e "s/\n/,/g" | sed -e "s/,$//")
+			rows=($(cut -d ',' -f 2 $template | perl -p -e "s/\n/ /g"))
+			cols=($(cut -d ',' -f 3 $template | perl -p -e "s/\n/ /g"))
+			# keys : mysql key names,  (rows, cols) : set of (row, col) of excel file
+		fi
+	####		keys="application_name",$keys
+	fi
+	rm -fr $pwd/tmpDIR
+	if [ ${xlsx##*.} = 'xlsx' ]; then # xlsxファイルなら
+		xlsx2csv -a $xlsx $pwd/tmpDIR    # csv file 生成
+	else                              # csv ファイルなら
+		mkdir $pwd/tmpDIR
+		cp $xlsx $pwd/tmpDIR
+	fi
+	pureIFS=$IFS
+	IFS=$'\n'
+
+	for tmp in $(\ls tmpDIR | sed -e "s/ / /"); do
+		if ! [ $year ] || [ ${${tmp%%.*}%%年度} -ge $year ]; then
+		tmp=$pwd/tmpDIR/$tmp
+		echo "Processing : " $tmp
+		# 例外処理
+
+		# \cite などの\を消す
+		perl -i".bak" -pe "s/\\\\\\\\/<br>/g;s/\\\\cite\{.*\}//g" $tmp
+		if ! diff $tmp.bak $tmp >/dev/null; then
+			echo "TeX command may be exists"
+		fi
+
+		# "" を変換  # 改行コード変換
+		perl -pi -e "s/\"\"/<quote>/g;s/\x0d/\x0a/g" $tmp
+		# 空行削除
+		if [ $template_flag != "true" ]; then
+			perl -pi -e "s/^,*$//g;s/^\s*$//g" $tmp
+		fi
+		# 半角に置換
+		for i in 0 1 2 3 4 5 6 7 8 9; do perl -pi -e "s/\xEF\xBC\x9$i/$i/g" $tmp; done
+		#    for i in 0 1 2 3 4 5 6 7 8 9; do  perl -pi -e "use utf8;tr/０-９Ａ-Ｚａ-ｚ/0-9A-Za-z/" $tmp; done
+
+		#     # ""で囲まれた領域にある,区切りを変換
+		#     perl -i".bak" -pe "s/,\"(.+?)(,)([^\",]+?)\",/,\"\1<comma> \3\",/g" $tmp
+		#     while ! diff $tmp.bak $tmp >/dev/null ;
+		#     do
+		# 				perl -i".bak" -pe "s/,\"(.+?)(,)([^\",]+?)\",/,\"\1<comma> \3\",/g" $tmp
+		#     done
+
+		echo "Convert , to <comma>"
+		# ""で囲まれた<br>以外を\nに戻す
+		perl -i -pe "s/,/<comma-tmp>/g" $tmp
+		perl -i -pe 's/\n/<br-tmp>/g' $tmp
+		tmp2=$(cat $tmp)
+		rm -f $tmp
+		touch $tmp
+		while [ -n "${tmp2#*<comma-tmp>}" ]; do
+			tmp3=$(echo ${tmp2%%<comma-tmp>*} | sed -e 's@[^"]@@g;s/[^"]//g' | wc -c) # "の数をカウント \" を先に消しておいたほうがいいか？
+			if [ $((($tmp3 - 1) % 2)) -eq 0 ]; then                                   # "の数が偶数か判別
+				echo $(cat $tmp)${tmp2%%<comma-tmp>*}"," >$tmp
+				if [ $tmp2 = ${tmp2#*<comma-tmp>} ]; then
+					echo $(cat $tmp)$tmp2 >$tmp
+					tmp2=""
+				else
+					tmp2=${tmp2#*<comma-tmp>}
+				fi
+			else
+				tmp2=${tmp2%%<comma-tmp>*}"<comma>"${tmp2#*<comma-tmp>} # 奇数の場合""で囲まれた<br-tmp>なので<br>として残す
+			fi
+			#				echo $tmp2 | cut -c1-10
+		done
+		#   	echo $tmp2
+
+		echo "Convert <br> to line break"
+		# ""で囲まれた\n を<br>に変換
+		rm -f $tmp.csv
+		touch $tmp.csv
+		tmp2=$(cat $tmp)
+		while [ ${tmp2#*<br-tmp>} ]; do
+			tmp3=$(echo ${tmp2%%<br-tmp>*} | sed -e 's@[^"]@@g;s/[^"]//g' | wc -c) # "の数をカウント \" を先に消しておいたほうがいいか？
+			#				echo $tmp3
+			if [ $((($tmp3 - 1) % 2)) -eq 0 ]; then # "の数が偶数か判別
+				echo ${tmp2%%<br-tmp>*} >>$tmp.csv
+				tmp2=${tmp2#*<br-tmp>}
+			else
+				tmp2=${tmp2%%<br-tmp>*}"<br>"${tmp2#*<br-tmp>} # 奇数の場合""で囲まれた<br-tmp>なので<br>として残す
+			fi
+		done
+
+		# 		# aaa"bbb"ccc<br>ddd"eee"fff には対応していない
+		perl -i".bak" -pe 's/^([^"]*)<br>/\1\n/g;s/<br>([^"]*)$/\n\1/g;s/\"<br>/\"\n/g' $tmp.csv
+		while ! diff $tmp.csv.bak $tmp.csv >/dev/null; do
+			perl -i".bak" -pe 's/^([^"]*)<br>/\1\n/g;s/<br>([^"]*)$/\n\1/g;s/\"<br>/\"\n/g' $tmp.csv
+		done
+
+		\cp $tmp.csv $tmp.org
+		# 複数のスペースを一つにまとめる # セル内の末尾のスペース削除 # 空白行削除
+		perl -i -pe "s/  / /g;s/ ,/,/g;s/^\s*$//g" $tmp.csv
+
+		# template がただの数字の場合 スキップする行数を表す．
+		if [[ $(cat $template) =~ ^[0-9]+$ ]]; then
+			echo " number of skip = $skip"
+			perl -i -pe "s/\"//g;s/,/\t/g;s/<comma>/,/g;s/^\s*$//g" $tmp.csv
+			wc $tmp.csv
+			#				cat $tmp.csv
+			# 				echo "mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass  $db -u sekiguchi -e \"load data infile '$tmp.csv' into table $table lines terminated by '\n' ignore $skip lines;\""
+
+			echo "load data infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
+
+			mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "load data infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
+		else
+			if [ "vertical" = "$(cat $template)" ]; then
+				keys=$(cut -d ',' -f 1 $tmp.csv | perl -p -e "s/\n/,/g" | sed -e "s/,$//")
+				values=$(cut -d ',' -f 2 $tmp.csv | perl -p -e "s/^/\"/g" | perl -p -e "s/\n/\",/g" | perl -p -e "s/\"\"/\"/g" | sed -e "s/,$//")
+				#						echo  "mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass  $db -u sekiguchi -e \"replace into $table ($keys) values ($values);\""
+				mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "replace into $table ($keys) values ($values);"
+			else
+				values=""
+				\cp $tmp.csv $tmp.org
+				for i in $(seq 1 ${#rows}); do
+					#				echo $rows[$i] $cols[$i]
+					#				echo `cut -f $cols[$i] -d ',' $tmp.csv | sed -e "$rows[$i]!d" | perl -pe "s/<quote>/'/g;s/\"//g;s/<comma>/,/g"`
+					values=$values,\"$(cut -f $cols[$i] -d ',' $tmp.csv | sed -e "$rows[$i]!d" | perl -pe "s/<quote>/'/g;s/\"//g;s/<comma>/,/g")\"
+				done
+				values=$(echo $values | sed -e "s/^,//")
+				####  				if [ ${values%%\",\"*} = "\"application" ]; then
+				####  						values=\"$application_name\",$values
+				####  				else
+				####  						values=\"\",$values
+				####  				fi
+				mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "replace into $table ($keys) values ($values);"
+			fi
+		fi
+	fi
+	done
+	rm -f rm-template.csv
+	rm -fr tmpDIR
+	IFS=$pureIFS # defult は $' \t\n'
+
+fi
+echo "\\n"
