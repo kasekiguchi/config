@@ -13,20 +13,38 @@ kill_line()
 {
     global
     Send +{End}
-    Send ^c{Del}
+    Send ^x
 }
 
-yank()
+plain_text_yank()
 {
     ; Convert any copied files, HTML, or other formatted text to plain text
     Clipboard = %Clipboard%
 
     ; Paste by pressing Ctrl+V
-    SendInput, ^v
-;clipboard = %clipboard%					;テキスト以外の形式をテキストに変換
- ;       Send ^v
+    SendInput ^v
 }
 
+move_tab(dir)
+{
+    if (dir >= 1){ ; 左へ移動
+    if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
+        Send ^{PgUp}
+    }
+    else {
+        Send ^+{Tab}
+    }
+    }
+    else{ ; 右へ移動
+            if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
+        Send ^{PgDn}
+    }
+    else {
+        Send ^{Tab}
+    }
+    }
+    Return
+}
 ;; }}}
 
 ;; {{{ special character : from upper to bottom of the keyboard
@@ -54,7 +72,7 @@ yank()
         Send ^+]
     }
     Return
-;; for Excel and Chrome
+;; for Excel, Spreadsheet and MATLAB
 <^Enter::
     if (WinActive("ahk_exe MATLAB.exe")) { ; MATLAB : 実行
             Send {CtrlDown}{Enter}{CtrlUp}
@@ -79,37 +97,17 @@ yank()
 !+>:: ; goto end of file
     Send ^{End}
     Return
-!#Left:: ; タブ移動
-    if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
-        Send ^{PgUp}
-    }
-    else {
-        Send ^+{Tab}
-    }
+!^Left:: ; タブ移動
+    move_tab(1)
     Return
-!#Right:: ; タブ移動
-    if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
-        Send ^{PgDn}
-    }
-    else {
-        Send ^{Tab}
-    }
+!^Right:: ; タブ移動
+    move_tab(0)
     Return
->!>^Left:: ; タブ移動（右手用）
-    if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, Matlab, Excel
-        Send ^{PgUp}
-    }
-    else {
-        Send ^+{Tab}
-    }
+!^h:: ; タブ移動
+    move_tab(1)
     Return
->!>^Right:: ; タブ移動（右手用）
-    if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
-        Send ^{PgDn}
-    }
-    else {
-        Send ^{Tab}
-    }
+!^l:: ; タブ移動
+    move_tab(0)
     Return
 ;; }}}
 
@@ -160,7 +158,7 @@ yank()
     Send ^v
     Return
 !+v:: ; paste
-    yank()
+    plain_text_yank()
     Return
 !w:: ; close tab
     if (WinActive("ahk_class XLMAIN") or WinActive("ahk_class OpusApp")) { ; Excel
@@ -174,6 +172,9 @@ yank()
     Send ^x
     Return
 ^y:: ; paste
+    Send ^v
+    Return
+!y:: ; paste
     Send ^v
     Return
 <^z:: ; scroll up

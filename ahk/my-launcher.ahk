@@ -22,12 +22,12 @@ WinActivate, %title%
 return
 }
 
-^!f::
+;^!f::
 ;Launch("TE64.exe","C:\Users\sekiguchi\OneDrive - tcu.ac.jp\Setting\setup\te180101\TE64.exe")
 ;Launch("Clover.exe","C:\Program Files (x86)\Clover\Clover.exe")
 ;Launch("explorer.exe","C:\Windows\explorer.exe") ; QTTABBar 重すぎ
-Launch("HmFilerClassic.exe","C:\Program Files\HmFilerClassic\HmFilerClassic.exe")
-return
+;Launch("HmFilerClassic.exe","C:\Program Files\HmFilerClassic\HmFilerClassic.exe")
+;return
 
 ^!e::
 ;Launch("atom.exe","C:\Users\sekiguchi\AppData\Local\atom\atom.exe")
@@ -41,9 +41,9 @@ Launch("chrome.exe","C:\Program Files\Google\Chrome\Application\chrome.exe")
 ;"C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Google Chrome")
 return
 
-^!l::
-Launch("LINE.exe","C:\Users\sekiguchi\AppData\Local\LINE\bin\LineLauncher.exe")
-return
+;^!l::
+;Launch("LINE.exe","C:\Users\sekiguchi\AppData\Local\LINE\bin\LineLauncher.exe")
+;return
 
 ^!c::
 ;Launch("Franz.exe","C:\Users\sekiguchi\AppData\Local\Programs\franz\Franz.exe")
