@@ -141,7 +141,6 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ;vk14::Send {Blind}{vkA2}
 ;vkA2vk14::Send {Home}
 ;vkFC{a}::Send {Home}
-;#Include C:/Users/sekiguchi/Documents/GitHub/alt-ime-ahk/alt-ime-ahk.ahk
-#Include C:/Users/sekiguchi/Documents/GitHub/config/ahk/my-launcher.ahk
-#Include C:/Users/sekiguchi/Documents/GitHub/config/ahk/my-keybind.ahk
+#Include %A_ScriptDir%/my-launcher.ahk
+#Include %A_ScriptDir%/my-keybind.ahk
 
