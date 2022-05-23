@@ -1,13 +1,7 @@
 {
 	"folders": [
 		{
-			"path": "/Users/sekiguchi/OneDrive - tcu.ac.jp/LAB/Share/web"
-		},
-		{
-			"path": "C:/Users/sekiguchi/OneDrive - tcu.ac.jp/Setting/bin"
-		},
-		{
-			"path": "../../../../Documents/github/lab_HP"
+			"path": "../../../lab_HP"
 		}
 	],
 	"settings": {
