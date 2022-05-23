@@ -48,7 +48,7 @@ move_tab(dir)
 ;; }}}
 
 ;; {{{ special character : from upper to bottom of the keyboard
-<^\:: ; MATLAB,VSCode : toggle side bar
+^\:: ; MATLAB,VSCode : toggle side bar
     if (WinActive("ahk_class SunAwtFrame")) { ; Matlab
         Send ^+m
     }
