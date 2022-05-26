@@ -28,7 +28,7 @@ plain_text_yank()
 move_tab(dir)
 {
     if (dir >= 1){ ; 左へ移動
-    if (WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
+    if (WinActive("ahk_exe chrome.exe") or WinActive("ahk_class Chrome_WidgetWin_1") or WinActive("ahk_class SunAwtFrame") or WinActive("ahk_class XLMAIN")) { ; VSCode, MATLAB, Excel
         Send ^{PgUp}
     }
     else {
