@@ -1,0 +1,30 @@
+// not work
+// https://shd101wyy.github.io/markdown-preview-enhanced/#/ja-jp/puppeteer
+// に従いCSSのカスタマイズをすることで変更可
+
+.token.comment,
+.token.blockquot {
+  font-size: 1em;
+  color: #008013;
+  font-weight: bold;
+}
+.text {
+  font-size: 1em;
+  color: #A709F5;
+  font-weight: bold;
+}
+.token.keyword {
+  font-size: 1em;
+  color: #0E00FF;
+  font-weight: bold;
+}
+th,
+td {
+  font-size: .4em;
+  padding: .8em;
+  border-radius: 3px;
+  line-height: 1.4;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
