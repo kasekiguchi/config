@@ -1,21 +1,35 @@
-// not work
 // https://shd101wyy.github.io/markdown-preview-enhanced/#/ja-jp/puppeteer
-// に従いCSSのカスタマイズをすることで変更可
+// に従いC-S-p : Markdown Preview Enhanced: Customize Css
+// からCSSを開き以下を記述することで変更可
+// プレビューを右クリックでOpen in Browserで開きPDFで印刷する.
 
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+.markdown-preview.markdown-preview {
+  // modify your style here
+  // eg: background-color: blue;
 .token.comment,
 .token.blockquot {
   font-size: 1em;
   color: #008013;
   font-weight: bold;
 }
-.text {
+pre{
   font-size: 1em;
-  color: #A709F5;
+  color: #000000;
   font-weight: bold;
 }
 .token.keyword {
   font-size: 1em;
   color: #0E00FF;
+  font-weight: bold;
+}
+.token.number,
+.token.function,
+.token.operator {
+  font-size: 1em;
+  color: #000;
   font-weight: bold;
 }
 th,
@@ -27,4 +41,4 @@ td {
   margin-top: 0;
   margin-bottom: 16px;
 }
-
+}
