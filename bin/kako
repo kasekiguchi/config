@@ -1,20 +1,19 @@
-#! /bin/zsh
-tmpIP=(`ifconfig | grep broadcast`)
+#! /usr/bin/zsh
+tmpIP=($(ifconfig | grep broadcast))
 IP=${tmpIP[1]}
 echo "1 : netvolante\t 2: icloud \t 3 : local"
 #kako=kasekiguchi.clear-net.jp
 kako=kmhome.aa0.netvolante.jp
-case $1 in 
-    1)
+case $1 in
+1)
 	kako=kmhome.aa0.netvolante.jp
 	;;
-    2)
+2)
 	kako=kako.271393946.members.btmm.icloud.com
 	;;
-    3)
+3)
 	kako=kako.local
 	;;
 esac
 echo "ssh $kako"
-      ssh $kako
-
+ssh $kako
