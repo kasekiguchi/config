@@ -22,12 +22,12 @@ WinActivate, %title%
 return
 }
 
-;^!f::
+^!f::
 ;Launch("TE64.exe","C:\Users\sekiguchi\OneDrive - tcu.ac.jp\Setting\setup\te180101\TE64.exe")
 ;Launch("Clover.exe","C:\Program Files (x86)\Clover\Clover.exe")
-;Launch("explorer.exe","C:\Windows\explorer.exe") ; QTTABBar 重すぎ
+Launch("explorer.exe","C:\Windows\explorer.exe") ; QTTABBar 重すぎ
 ;Launch("HmFilerClassic.exe","C:\Program Files\HmFilerClassic\HmFilerClassic.exe")
-;return
+return
 
 ^!e::
 ;Launch("atom.exe","C:\Users\sekiguchi\AppData\Local\atom\atom.exe")
@@ -49,7 +49,8 @@ return
 ;Launch("Franz.exe","C:\Users\sekiguchi\AppData\Local\Programs\franz\Franz.exe")
 ;"C:\Users\sekiguchi\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\eFounders\Station.exe"
 ;Launch("Station.exe","C:\Users\sekiguchi\AppData\Local\browserX\Station.exe")
-Launch("Stack.exe","C:\Users\sekiguchi\AppData\Local\Programs\stack\Stack.exe")
+;Launch("Stack.exe","C:\Users\sekiguchi\AppData\Local\Programs\stack\Stack.exe")
+Launch("Slack.exe","C:\Users\kasek\AppData\Local\Microsoft\WindowsApps\Slack.exe")
 return
 
 ^!p::

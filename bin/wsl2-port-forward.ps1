@@ -7,7 +7,7 @@ if( ! $ip ){
 }
 
 # All the ports you want to forward separated by comma
-$ports=@(22,3000,8080);
+$ports=@(22,3000,8080,3900,8980);
 $ports_a = $ports -join ",";
 
 # Remove Firewall Exception Rules
