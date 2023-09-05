@@ -188,11 +188,11 @@ else
 			perl -i -pe "s/\"//g;s/,/\t/g;s/<comma>/,/g;s/^\s*$//g" $tmp.csv
 			wc $tmp.csv
 			#				cat $tmp.csv
-			# 				echo "mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass  $db -u sekiguchi -e \"load data infile '$tmp.csv' into table $table lines terminated by '\n' ignore $skip lines;\""
+			# 				echo "mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass  $db -u sekiguchi -e \"load data local infile '$tmp.csv' into table $table lines terminated by '\n' ignore $skip lines;\""
 
-			echo "load data infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
+			echo "load data local infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
 
-			mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "load data infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
+			mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "load data local infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
 		else
 			if [ "vertical" = "$(cat $template)" ]; then
 				keys=$(cut -d ',' -f 1 $tmp.csv | perl -p -e "s/\n/,/g" | sed -e "s/,$//")
@@ -218,8 +218,8 @@ else
 		fi
 	fi
 	done
-	rm -f rm-template.csv
-	rm -fr tmpDIR
+	#rm -f rm-template.csv
+	#rm -fr tmpDIR
 	IFS=$pureIFS # defult は $' \t\n'
 
 fi
