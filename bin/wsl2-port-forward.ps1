@@ -1,3 +1,5 @@
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
+
 if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole("Administrators")) { Start-Process powershell.exe "-File `"$PSCommandPath`"" -Verb RunAs; exit }
 
 $ip = bash.exe -c "ip r |tail -n1|cut -d ' ' -f9"
@@ -7,7 +9,7 @@ if( ! $ip ){
 }
 
 # All the ports you want to forward separated by comma
-$ports=@(22,3000,8080,3900,8980);
+$ports=@(22,3000,3001,8080,3900,8980);
 $ports_a = $ports -join ",";
 
 # Remove Firewall Exception Rules
@@ -21,6 +23,9 @@ for( $i = 0; $i -lt $ports.length; $i++ ){
   $port = $ports[$i];
   iex "netsh interface portproxy add v4tov4 listenport=$port listenaddress=* connectport=$port connectaddress=$ip";
 }
+  iex "netsh interface portproxy add v4tov4 listenport=33333 listenaddress=* connectport=22 connectaddress=$ip";
 
 # Show proxies
 iex "netsh interface portproxy show v4tov4";
+
+Set-ExecutionPolicy -ExecutionPolicy Restricted -Scope Process

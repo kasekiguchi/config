@@ -1,0 +1,89 @@
+
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+.markdown-preview.markdown-preview {
+  // modify your style here
+  // eg: background-color: blue;
+.token.comment,
+.token.blockquot {
+  font-size: 1em;
+  color: #008013;
+  font-weight: bold;
+}
+pre{
+  font-size: 1em;
+  color: #000000;
+  font-weight: bold;
+}
+.token.keyword {
+  font-size: 1em;
+  color: #0E00FF;
+  font-weight: bold;
+}
+.token.number,
+.token.function,
+.token.operator {
+  font-size: 1em;
+  color: #000;
+  font-weight: bold;
+}
+th,
+td {
+  font-size: .4em;
+  padding: .8em;
+  border-radius: 3px;
+  line-height: 1.4;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+}
+
+// ここから追記 章番号追加のため
+// https://qiita.com/UKawamura/items/42f907c88686fb3be4da
+body{
+  counter-reset: chapter;
+}
+
+h1{
+  counter-reset: sub-chapter;
+}
+
+h2{
+  counter-reset: section;
+}
+
+h3{
+  counter-reset: sub-section;
+}
+
+h4{
+  counter-reset: sub-sub-section;
+}
+
+.markdown-preview.markdown-preview {
+  h1::before{
+    counter-increment: chapter;
+    content: counter(chapter) ". ";
+  }
+
+  h2::before{
+    counter-increment: sub-chapter;
+    content: counter(chapter) "." counter(sub-chapter) ". ";
+  }
+
+  h3::before{
+    counter-increment: section;
+    content: counter(chapter) "." counter(sub-chapter) "." counter(section) ". ";    
+  }
+
+  h4::before{
+    counter-increment: sub-section;
+    content: counter(chapter) "." counter(sub-chapter) "." counter(section) "." counter(sub-section) ".";    
+  }
+
+  h5::before{
+    counter-increment: sub-sub-section;
+    content: counter(chapter) "." counter(sub-chapter) "." counter(section) "." counter(sub-section) "." counter(sub-sub-section) ".";    
+  }
+}
