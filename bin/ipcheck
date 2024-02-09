@@ -1,6 +1,10 @@
 #! /bin/zsh +x 
+echo "If any trouble is happened, check new line code. "
+echo "This file and zsh/zsh_alias should be LF"
+
 source /Users/sekiguchi/Documents/GitHub/config/bin/zsh/zsh_alias
 #/Users/sekiguchi/OneDrive\ -\ tcu.ac.jp/Setting/zsh/zsh_alias
+echo $1
 if [ ! $1 ]; then
     echo "Please input number *** at 192.168.***.###"
     exit
