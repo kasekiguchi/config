@@ -371,3 +371,7 @@ if (A_PriorHotkey == "*~RAlt")
 }
 Return
 
+; PrtSc で IME を ON
+$PrintScreen::
+    IME_SET(1)
+Return
