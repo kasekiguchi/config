@@ -38,12 +38,16 @@
 !/::Send,{Delete}
 
 ; 行挿入
-!Enter::
+!+Enter::
   If (GetKeyState("Ctrl", "P")) {
     Send, {Up}{End}{Enter}
   } Else {
     Send, {End}{Enter}
   }
+Return
+
+!Enter:: ; Excel 改行
+  Send, !{Enter}
 Return
 
 ; 半角英数
