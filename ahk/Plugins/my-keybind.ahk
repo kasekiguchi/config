@@ -204,4 +204,3 @@ Return
 !^-:: ; 縮小
     Send, ^+-
 Return
-
