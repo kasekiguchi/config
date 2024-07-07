@@ -204,3 +204,15 @@ Return
 !^-:: ; 縮小
     Send, ^+-
 Return
+
+aux_reset()
+{
+    global
+    if GetKeyState("Alt")
+        Send {AltUp}
+    if GetKeyState("Ctrl")
+        Send {CtrlUp}
+    if GetKeyState("Shift")
+        Send {ShiftUp}
+}
+
