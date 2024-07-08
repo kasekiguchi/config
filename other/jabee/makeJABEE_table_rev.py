@@ -623,7 +623,7 @@ if __name__ == "__main__":
         for sub in listKyoyo:
             col1 = checkUnits(data, sub, col1)
             col2 = checkScore(data, sub, col2)
-            sub.setKyoyo()
+            #   sub.setKyoyo()
             sub.JABEE[0] = 2
             sub.JABEE[1] = 1
 
