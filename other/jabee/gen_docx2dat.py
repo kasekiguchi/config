@@ -19,7 +19,7 @@ flag = 0
 for i, t in enumerate(document.tables):
     for j, r in enumerate(t.rows):
         if r.cells[0].text.replace("\n", "") in listGroup:
-            group = listGroup
+            group = r.cells[0].text.replace("\n", "")
         else:
             group = "専門科目"
         if int(args[1]) >= 2023:

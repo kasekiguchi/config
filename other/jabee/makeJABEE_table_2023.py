@@ -16,13 +16,10 @@ class Student:
         self.id = id
         self.yomi = yomi
         self.birth = birth
-        # self.table = table
-        self.req = req  # requirement
+        self.table = []
+        self.requirement = req  # requirement
 
         self.lsSubject = lsSubject
-
-        self.numKyoyo = 0
-        self.numTaiiku = 0
 
         self.check()
 
@@ -41,38 +38,26 @@ class Student:
     def getSubjects(self):
         return self.lsSubject
 
-    def getNumKyoyo(self):
-        return self.numKyoyo
-
-    def getNumTaiiku(self):
-        return self.numTaiiku
-
     def check(self):
-        unitsKyoyo = 0
-        unitsTaiiku = 0
+        countKyoyo = 0
+        countTaiiku = 0
 
         for sub in self.lsSubject:
             if sub.getPassed():
-                if sub.getKyoyo() == True:
-                    unitsKyoyo += sub.getUnits()
+                if sub.group == "教養科目":
+                    if countKyoyo < 5:
+                        countKyoyo += 1
+                    else:
+                        continue
 
-                elif sub.getTaiiku() == True:
-                    unitsTaiiku += sub.getUnits()
+                if sub.group == "体育科目":
+                    if countTaiiku < 1:
+                        countTaiiku += 1
+                    else:
+                        continue
 
-                else:
-                    for jj in range(0, 9):
-                        jab = sub.getJABEE(jj)
-                        if jab == 1:
-                            self.JABEE_sum1[jj] += 1
-                        elif jab == 2:
-                            self.JABEE_sum2[jj] += 1
-
-        self.numKyoyo = int(min(unitsKyoyo / 2, 5))
-        self.JABEE_sum1[0] += self.numKyoyo
-        self.JABEE_sum2[1] += self.numKyoyo
-
-        self.numTaiiku = int(unitsTaiiku)
-        self.JABEE_sum2[0] += self.numTaiiku
+                self.table.append(
+                    [sub.name, sub.group, sub.compulsory] + sub.getJABEE().tolist())
 
 
 class Subject:
@@ -85,11 +70,12 @@ class Subject:
         self.score = 0
         self.JABEE = np.zeros(9)
         self.year = year
-        if year >= 2023:
+        if int(year) >= 2023:
             self.MSE = np.zeros(7)
         else:
             self.MSE = np.zeros(9)
-        self.group
+        self.group = ""
+        self.compulsory = ""
 
     def setGroup(self, val):
         self.group = val
@@ -138,23 +124,20 @@ class Subject:
     def getMSE(self):
         return self.MSE
 
-    def getJABEE(self, col):
-        return self.JABEE[col]
-
-    def getJABEE_list(self):
+    def getJABEE(self):
         return self.JABEE
 
 
-def getScore(str):
-    if str == u'秀':
+def getScore(strng):
+    if strng == u'秀':
         score = 4
-    elif str == u'優':
+    elif strng == u'優':
         score = 3
-    elif str == u'良':
+    elif strng == u'良':
         score = 2
-    elif str == u'可':
+    elif strng == u'可':
         score = 1
-    elif str == u'認定':
+    elif strng == u'認定':
         score = 9
     else:
         score = 0
@@ -162,13 +145,13 @@ def getScore(str):
     return score
 
 
-def checkUnits(sub, str):
-    units = float(str)   # 0.5単位に対応 2024.3.14
+def checkUnits(sub, strng):
+    units = float(strng)   # 0.5単位に対応 2024.3.14
     sub.setUnits(units)
 
 
-def checkScore(sub, str):
-    score = getScore(str)
+def checkScore(sub, strng):
+    score = getScore(strng)
     sub.setScore(score)
 
 
@@ -191,11 +174,11 @@ def checkJABEE(sub, val):
     sub.setJABEE(val)
 
 
-def find_item(data, col, str):
-    # find str data in data start from col
+def find_item(data, col, strng):
+    # find strng data in data start from col
     # if find return the col, else return 0
     for i in range(col, len(data) - 1):
-        if data[i] == str:
+        if data[i] == strng:
             return i
 
 
@@ -285,7 +268,7 @@ if __name__ == "__main__":
         if (year == '24'):
             table = table_2024
 
-        if year >= 23:
+        if int(year) >= 23:
             mse2jabee = convertMSE2JABEE
         else:
             def mse2jabee(x): return x
@@ -302,26 +285,34 @@ if __name__ == "__main__":
         col2 = 41 + (col1 - 41) * 2   # 357
         col = c1 + 3
         listSubject = []
-        sub_group = ""
+        sub_group = ""  # 科目群
+        comp = ""  # 必修・選択
         while 1:
-            str = data[col]
-            if str == u'' or str == u'単位' or str == u'以下余白':  # 修了条件
+            strng = data[col]
+            if strng == u'' or strng == u'単位' or strng == u'以下余白':  # 修了条件
                 break
 
-            if str[0] != u'■':
-                sub = Subject(str.replace(u'　', ''))
+            if strng[0] != u'■':
+                sub = Subject(strng.replace(u'　', ''), '20' + year)
                 checkScore(sub, data[col + col2score])  # set sub.passed
                 if sub.getPassed() == True:
                     sub.setGroup(sub_group)
+                    sub.compulsory = comp
                     checkUnits(sub, data[col + col2unit])
                     checkTarget(sub, table)
-                    checkJABEE(sub, mse2jabee(sub.getMSE))
+                    checkJABEE(sub, mse2jabee(sub.getMSE()))
                     listSubject.append(sub)
             else:
-                sub_group = (re.findall('■(.*)・', str))
+                sub_group = re.findall('■(.*)・', strng)[0]
+                if "必修" in strng:
+                    comp = "○"
+                elif "選択" in strng:
+                    comp = "△"
+                else:
+                    comp = ""
             col += 1
 
-        student = Student(name, id, yomi, birth, table, listSubject)
+        student = Student(name, id, yomi, birth, listSubject, [10] * 9)
         listStudent.append(student)
 
     for std in listStudent:

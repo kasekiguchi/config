@@ -1,6 +1,7 @@
 import openpyxl
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
 import win32com.client
+import numpy as np
 
 
 def writeExcel(wfile, student):
@@ -47,7 +48,8 @@ def writeExcel(wfile, student):
     for rowData in tbl:
         colIndex = 2 + zone_index * 14
         for colData in rowData:
-            sheet.cell(row=rowIndex, column=colIndex).value = colData
+            sheet.cell(row=rowIndex, column=colIndex).value = str(colData).replace(
+                "0.0", "")
             sheet.cell(row=rowIndex, column=colIndex).border = border
             sheet.cell(row=rowIndex, column=colIndex).alignment = alignment
             if rowIndex == 6:
@@ -64,10 +66,6 @@ def writeExcel(wfile, student):
             zone_index += 1
             rowIndex = 7
 
-    numKyoyo = student.getNumKyoyo()
-    numTaiiku = student.getNumTaiiku()
-    checkedK = 0
-    checkedT = 0
     rowIndex = 6
     zone_index = 0
 
@@ -81,32 +79,6 @@ def writeExcel(wfile, student):
             sheet.cell(row=rowIndex, column=colIndex).font = bold
             rowIndex += 1
             continue
-
-        if rowData[1] == u'教養':
-            if checkedK < numKyoyo:
-                sheet.cell(row=rowIndex, column=colIndex).value = u'☑'
-                sheet.cell(row=rowIndex, column=colIndex).border = border
-                sheet.cell(row=rowIndex, column=colIndex).alignment = alignment
-                sheet.cell(row=rowIndex, column=colIndex).fill = fillG
-                checkedK += 1
-
-        elif rowData[1] == u'体育':
-            if checkedT < numTaiiku:
-                sheet.cell(row=rowIndex, column=colIndex).value = u'☑'
-                sheet.cell(row=rowIndex, column=colIndex).border = border
-                sheet.cell(row=rowIndex, column=colIndex).alignment = alignment
-                sheet.cell(row=rowIndex, column=colIndex).fill = fillG
-                checkedT += 1
-
-        else:
-            sub_name = rowData[0]
-            sheet.cell(row=rowIndex, column=colIndex).border = border
-            sheet.cell(row=rowIndex, column=colIndex).alignment = alignment
-            for sub in student.getSubjects():
-                if (sub_name == sub.getName()):
-                    sheet.cell(row=rowIndex, column=colIndex).fill = fillG
-                    if (sub.getEnable() and sub.getPassed()):
-                        sheet.cell(row=rowIndex, column=colIndex).value = u'☑'
 
         rowIndex += 1
         if rowIndex > 56:
@@ -169,7 +141,7 @@ def writeExcel(wfile, student):
         col_ind2 = 2 + zone_index * 14
         for col in range(0, 13):
             sheet.cell(row=6, column=col_ind2 +
-                       col).value = sheet.cell(row=6, column=col_ind1 + col).value
+                       col).value = str(sheet.cell(row=6, column=col_ind1 + col).value).replace("0.0", "")
             sheet.cell(row=6, column=col_ind2 + col).border = border
             sheet.cell(row=6, column=col_ind2 + col).font = bold
             sheet.cell(row=6, column=col_ind2 + col).fill = fillB
@@ -190,17 +162,18 @@ def writeExcel(wfile, student):
         sheet.cell(row=row_ind + ix, column=col_ind).fill = fillB
         sheet.cell(row=row_ind + ix, column=col_ind).alignment = alignment
 
+    summary = np.sum(np.array(list(zip(*tbl))[3:]), axis=1)
     for col in range(1, 10):  # JABEE集計
         alph1 = sheet.cell(row=6, column=5 + col).column_letter
         alph2 = sheet.cell(row=6, column=col_ind + col).column_letter
 
         sheet.cell(row=row_ind + 0, column=col_ind + col).value = col
         sheet.cell(row=row_ind + 1, column=col_ind +
-                   col).value = f'=COUNTIFS($D$7:$D$56,"○", {alph1}$7:{alph1}$56, "◎") + COUNTIFS($R$7:$R$52,"○", {alph2}$7:{alph2}$52, "◎")'
+                   col).value = student.requirement[col - 1]
         sheet.cell(row=row_ind + 2, column=col_ind +
-                   col).value = f'=COUNTIFS($D$7:$D$56,"○", $E7:$E56,"☑", {alph1}$7:{alph1}$56, "◎") + COUNTIFS($R$7:$R$52,"○", $S7:$S52,"☑", {alph2}$7:{alph2}$52, "◎")'
+                   col).value = summary[col - 1]
         sheet.cell(row=row_ind + 3, column=col_ind +
-                   col).value = sheet.cell(row=row_ind + 1, column=col_ind + col).value - sheet.cell(row=row_ind + 2, column=col_ind + col).value
+                   col).value = sheet.cell(row=row_ind + 1, column=col_ind + col).value - float(sheet.cell(row=row_ind + 2, column=col_ind + col).value)
         sheet.cell(row=row_ind + 4, column=col_ind +
                    col).value = f'=IF({alph2}55 >= {alph2}54, "達成", "未達")'
         for ix in range(0, 4):
