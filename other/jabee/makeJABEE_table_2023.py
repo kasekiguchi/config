@@ -11,13 +11,15 @@ from output_data import writeExcel, excel2pdf
 
 
 class Student:
-    def __init__(self, name, id, yomi, birth, lsSubject, req):
+    def __init__(self, name, id, yomi, birth, lsSubject, req, lstKyoyo, lstTaiiku):
         self.name = name
         self.id = id
         self.yomi = yomi
         self.birth = birth
-        self.table = []
         self.requirement = req  # requirement
+        self.lstKyoyo = lstKyoyo
+        self.lstTaiiku = lstTaiiku
+        self.table = [["科目名", "科目群", "必選"] + list(range(1, 10))]
 
         self.lsSubject = lsSubject
 
@@ -45,13 +47,15 @@ class Student:
         for sub in self.lsSubject:
             if sub.getPassed():
                 if sub.group == "教養科目":
-                    if countKyoyo < 5:
+                    if countKyoyo < len(self.lstKyoyo):
+                        sub.name = self.lstKyoyo[countKyoyo]
                         countKyoyo += 1
                     else:
                         continue
 
                 if sub.group == "体育科目":
-                    if countTaiiku < 1:
+                    if countTaiiku < len(self.lstTaiiku):
+                        sub.name = self.lstTaiiku[countTaiiku]
                         countTaiiku += 1
                     else:
                         continue
@@ -158,7 +162,7 @@ def checkScore(sub, strng):
 def checkTarget(sub, table):
     name = sub.getName()
     for tb in table:
-        if (tb[0] == name):
+        if (tb[0] == name) or ("教養" in tb[1] and "教養" in sub.group) or ("体育" in tb[1] and "体育" in sub.group):
             for ix in range(3, 3 + len(sub.MSE)):
                 if tb[ix] != u'':
                     if tb[ix] == u'◎':
@@ -231,10 +235,6 @@ if __name__ == "__main__":
 
     listStudent = []
 
-    col_head = 41  # position of "■教養科目・選択■"
-    col1 = 200
-    col2 = col_head + (col1 - col_head) * 2   # 357
-
     for data in student_scores:
         id = data[17]  # 学籍番号
         name = data[18].replace(u'　', '')  # 氏名
@@ -242,7 +242,7 @@ if __name__ == "__main__":
         yomi = data[20]
         GPA = data[21]
 
-        print(id, name, birth)
+#        print(id, name, birth)
 
         year = id[0:2]
 
@@ -268,12 +268,18 @@ if __name__ == "__main__":
         if (year == '24'):
             table = table_2024
 
-        if int(year) >= 23:
+        # JABEE達成のrequirement
+        req = np.sum([[int(s.replace("", "0").replace("0◎0", "2").replace("0○0", "1"))
+                       for s in row] for row in list(zip(*[row for row in table if row[2] == "○"]))[3:]], axis=1)
+        lstKyoyo = [s[0] for s in table if "教養" in s[1]]
+        lstTaiiku = [s[0] for s in table if "体育" in s[1]]
+
+        # 学科基準からJABEE基準への変換式の登録
+        if int(year) >= 23:  # 2023年度から基準更新
             mse2jabee = convertMSE2JABEE
         else:
             def mse2jabee(x): return x
 
-        col = col_head  # "科目" の最初の列
         c1 = find_item(data, 1, "科目")
         c2 = find_item(data, 1, "単位")
         c3 = find_item(data, 1, "評価")
@@ -281,8 +287,6 @@ if __name__ == "__main__":
             print("Error : check the length")
         col2unit = c2 - c1
         col2score = c3 - c1
-        col1 = 200
-        col2 = 41 + (col1 - 41) * 2   # 357
         col = c1 + 3
         listSubject = []
         sub_group = ""  # 科目群
@@ -312,14 +316,16 @@ if __name__ == "__main__":
                     comp = ""
             col += 1
 
-        student = Student(name, id, yomi, birth, listSubject, [10] * 9)
+        student = Student(name, id, yomi, birth, listSubject,
+                          req, lstKyoyo, lstTaiiku)
         listStudent.append(student)
 
     for std in listStudent:
+        print(std.id, std.name, std.birth)
         dir = os.getcwd()
 
         wfile1 = dir + '/' + 'results/' + std.getID() + '_' + std.getName() + '.xlsx'
         writeExcel(wfile1, std)
 
-#        wfile2 = dir + '/' +  'results/' + std.getID() + '_' +  std.getName() + '.pdf'
-#        excel2pdf(wfile1, wfile2)
+        wfile2 = dir + '/' + 'pdfs/' + std.getID() + '_' + std.getName() + '.pdf'
+        excel2pdf(wfile1, wfile2)
