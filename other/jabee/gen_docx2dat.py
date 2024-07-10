@@ -9,9 +9,9 @@ args = sys.argv
 document = Document('./' + args[1] + '.docx')
 dest = open('table_' + args[1] + '.dat', 'w', encoding='UTF-8')
 if int(args[1]) >= 2023:
-    dest.write("科目名	科目群	必選	1	2	3	4	5	6	7	\n")
+    dest.write("科目名	科目群	必選	1	2	3	4	5	6	7")
 else:
-    dest.write("科目名	科目群	必選	1	2	3	4	5	6	7	8	9	\n")
+    dest.write("科目名	科目群	必選	1	2	3	4	5	6	7	8	9")
 
 listGroup = "教養科目, 外国語科目, 体育科目, 理工学基礎科目, PBL科目"
 
@@ -25,14 +25,26 @@ for i, t in enumerate(document.tables):
         if int(args[1]) >= 2023:
             if len(r.cells) == 9:
                 if r.cells[1].text not in "授業科目":
+                    if "○" in r.cells[1].text:
+                        comp = "○"
+                    elif "△" in r.cells[1].text:
+                        comp = "△"
+                    else:
+                        comp = ""
                     print(i, j, r.cells[1].text, r.cells[3].text)
-                    dest.write(r.cells[1].text + "	" + group + "	" + " " + "	" + r.cells[2].text + "	" + r.cells[3].text +
-                               "	" + r.cells[4].text + "	" + r.cells[5].text + "	" + r.cells[6].text + "	" + r.cells[7].text + "	" + r.cells[8].text + "\n")
+                    dest.write("\n" + r.cells[1].text.replace("\n", "") + "	" + group + "	" + comp + "	" + r.cells[2].text + "	" + r.cells[3].text +
+                               "	" + r.cells[4].text + "	" + r.cells[5].text + "	" + r.cells[6].text + "	" + r.cells[7].text + "	" + r.cells[8].text)
         else:
             if len(r.cells) == 11:
                 if r.cells[1].text not in "授業科目":
+                    if "○" in r.cells[1].text:
+                        comp = "○"
+                    elif "△" in r.cells[1].text:
+                        comp = "△"
+                    else:
+                        comp = ""
                     print(i, j, r.cells[1].text, r.cells[3].text)
-                    dest.write(r.cells[1].text + "	" + group + "	" + " " + "	" + r.cells[2].text + "	" + r.cells[3].text +
-                               "	" + r.cells[4].text + "	" + r.cells[5].text + "	" + r.cells[6].text + "	" + r.cells[7].text + "	" + r.cells[8].text + r.cells[9].text + "	" + r.cells[10].text + "\n")
+                    dest.write("\n" + r.cells[1].text.replace("\n", "") + "	" + group + "	" + comp + "	" + r.cells[2].text + "	" + r.cells[3].text +
+                               "	" + r.cells[4].text + "	" + r.cells[5].text + "	" + r.cells[6].text + "	" + r.cells[7].text + "	" + r.cells[8].text + "	" + r.cells[9].text + "	" + r.cells[10].text)
 
 dest.close()
