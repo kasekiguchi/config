@@ -169,7 +169,10 @@ def writeExcel(wfile, student):
         cell.fill = fillB
         cell.alignment = alignment
 
-    summary = np.sum(np.array(list(zip(*tbl[1:]))[3:]), axis=1)
+    if len(tbl) == 1:
+        summary = np.zeros(9)
+    else:
+        summary = np.sum(np.array(list(zip(*tbl[1:]))[3:]), axis=1)
     for col in range(1, 10):  # JABEE集計
         col_ind = col_ind3 + col
         alph = sheet.cell(row=6, column=col_ind).column_letter
