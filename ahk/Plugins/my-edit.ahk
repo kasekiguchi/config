@@ -11,7 +11,7 @@
 !l::Send, {Right}
 
 ; Home
-!h::Send, {Home}
+;!h::Send, {Home} => backspace
 
 ; ; => End
 !`;::Send, {End}
@@ -32,10 +32,10 @@
 !Space::Send, {Enter}
 
 ; Backspace
-!n::Send, {Backspace}
+!h::Send, {Backspace}
 
 ; Delete
-!/::Send,{Delete}
+;!/::Send,{Delete}
 
 ; 行挿入
 !+Enter::
