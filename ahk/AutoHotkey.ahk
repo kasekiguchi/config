@@ -1,6 +1,6 @@
-﻿#Persistent
-#SingleInstance, Force
-#NoEnv
+﻿;#Persistent
+;#SingleInstance, Force
+;#NoEnv
 #UseHook
 #InstallKeybdHook
 #InstallMouseHook
@@ -9,14 +9,14 @@
 Process, Priority,, Realtime
 SendMode, Input
 SetWorkingDir %A_ScriptDir%
-SetTitleMatchMode, 2
+;SetTitleMatchMode, 2
 ; SetKeyDelay, , 10
 
 ; 変数の初期化
 #Include, %A_ScriptDir%\Variables.ahk
 
 ; メニューアイコン設定
-Menu, Tray, Icon, icon.ico
+Menu,Tray, Icon, icon.ico
 
 ; プラグインの検出・取り込み
 ;If (search_plugins()) {
