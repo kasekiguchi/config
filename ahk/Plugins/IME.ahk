@@ -26,9 +26,9 @@
       実行環境を AHK_L U64に (本家およびA32,U32版との互換性は維持したつもり)
       ・LongPtr対策：ポインタサイズをA_PtrSizeで見るようにした
 
-      ;==================================
+      ;=================
       ;  GUIThreadInfo
-      ;=================================
+      ;=================
       ; 構造体 GUITreadInfo
       ;typedef struct tagGUITHREADINFO {(x86) (x64)
       ;	DWORD   cbSize;                 0    0
@@ -57,38 +57,43 @@
 ; 動作確認用 内部ルーチン (マウスカーソル位置のウィンドウのIME状態を見る)
 ;  単体起動時のテスト用なので削除しても問題なし
 _ImeAutoExecuteSample:
-    Hotkey,#1,_ImeGetTest
-    Hotkey,#2,_ImeSetTest
-    Hotkey,#3,_ImeIsConvertingTest
-    Hotkey,+ESC,_ImeTestExt
-    SetTimer,_ImeInfoTimer,ON
-return
-
+    {
+        Hotkey,#1,_ImeGetTest
+        Hotkey,#2,_ImeSetTest
+        Hotkey,#3,_ImeIsConvertingTest
+        Hotkey,+ESC,_ImeTestExt
+        SetTimer,_ImeInfoTimer,ON
+        return
+    }
 ;--- IME状態表示タイマ ---
 _ImeInfoTimer:
-    Tooltip,% "IME_GET			: " . IME_GET(_mhwnd()) . "`n"
-        . "IME_GetConvMode		: " . IME_GetConvMode(_mhwnd()) . "`n"
-        . "IME_GetSentenceMode	: " . IME_GetSentenceMode(_mhwnd()) . "`n"
-        . "IME_GetConverting	: " . IME_GetConverting(_mhwnd())
-return
-
+    {
+        Tooltip, "IME_GET			: " . IME_GET(_mhwnd()) . "`n"
+            . "IME_GetConvMode		: " . IME_GetConvMode(_mhwnd()) . "`n"
+            . "IME_GetSentenceMode	: " . IME_GetSentenceMode(_mhwnd()) . "`n"
+            . "IME_GetConverting	: " . IME_GetConverting(_mhwnd())
+        return
+    }
 ;--- IME Get Test [Win]+[1] ---
 _ImeGetTest:
-    MsgBox,% "IME_GET			: " . IME_GET(_mhwnd()) . "`n"
-        . "IME_GetConvMode		: " . IME_GetConvMode(_mhwnd()) . "`n"
-        . "IME_GetSentenceMode	: " . IME_GetSentenceMode(_mhwnd()) . "`n"
-return
+    {
+        MsgBox, "IME_GET			: " . IME_GET(_mhwnd()) . "`n"
+            . "IME_GetConvMode		: " . IME_GetConvMode(_mhwnd()) . "`n"
+            . "IME_GetSentenceMode	: " . IME_GetSentenceMode(_mhwnd()) . "`n"
+        return
+    }
 ;--- IME Get Test [Win]+[2] ---
 _ImeSetTest:
-    MsgBox,% "IME_SET			: " . IME_SET(1,_mhwnd()) . "`n"
-        . "IME_SetConvMode		: " . IME_SetConvMode(0x08,_mhwnd()) . "`n"
-        . "IME_SetSentenceMode	: " . IME_SetSentenceMode(1,_mhwnd()) . "`n"
-return
-
-_mhwnd(){	;background test
-    MouseGetPos,x,,hwnd
-    return "ahk_id " . hwnd
-}
+    {
+        MsgBox, "IME_SET			: " . IME_SET(1,_mhwnd()) . "`n"
+            . "IME_SetConvMode		: " . IME_SetConvMode(0x08,_mhwnd()) . "`n"
+            . "IME_SetSentenceMode	: " . IME_SetSentenceMode(1,_mhwnd()) . "`n"
+        return
+    }
+    _mhwnd(){	;background test
+        MouseGetPos,x,,hwnd
+        return "ahk_id " . hwnd
+    }
 
 ;------------------------------------------------------------------
 ; IME窓のクラス名を調べるテストルーチン
@@ -112,15 +117,17 @@ _mhwnd(){	;background test
 ;  ￣￣￣￣
 ;------------------------------------------------------------------
 _ImeIsConvertingTest:
-    _ImeTestClassCheck()
-return
-_ImeTestClassCheck() {
-    MouseGetPos,,,hwnd
-    WinGetClass,Imeclass,ahk_id %hwnd%
-    Clipboard := Imeclass
-    ;IME_GetConverting() 動作チェック & IME 入力窓/候補窓 Class名確認
-    MsgBox,% Imeclass "`n" IME_GetConverting()
-}
+    {
+        _ImeTestClassCheck()
+        return
+    }
+    _ImeTestClassCheck() {
+        MouseGetPos,,,hwnd
+        WinGetClass,Imeclass,ahk_id hwnd
+        A_Clipboard := Imeclass
+        ;IME_GetConverting() 動作チェック & IME 入力窓/候補窓 Class名確認
+        MsgBox, Imeclass "`n" IME_GetConverting()
+    }
 ;--- 常駐テスト終了 [Shift]+[ESC] ---
 _ImeTestExt:
 ExitApp
@@ -135,7 +142,7 @@ ExitApp
 ;   戻り値          1:ON / 0:OFF
 ;-----------------------------------------------------------
 IME_GET(WinTitle="A") {
-    ControlGet,hwnd,HWND,,,%WinTitle%
+    ControlGet,hwnd,HWND,,,WinTitle
     if	(WinActive(WinTitle))	{
         ptrSize := !A_PtrSize ? 4 : A_PtrSize
         VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -158,7 +165,7 @@ IME_GET(WinTitle="A") {
 ;   戻り値          0:成功 / 0以外:失敗
 ;-----------------------------------------------------------
 IME_SET(SetSts, WinTitle="A") {
-    ControlGet,hwnd,HWND,,,%WinTitle%
+    ControlGet,hwnd,HWND,,,WinTitle
     if	(WinActive(WinTitle))	{
         ptrSize := !A_PtrSize ? 4 : A_PtrSize
         VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -174,7 +181,7 @@ IME_SET(SetSts, WinTitle="A") {
         , Int, SetSts) ;lParam  : 0 or 1
 }
 
-;===========================================================================
+;======================================
 ; IME 入力モード (どの IMEでも共通っぽい)
 ;   DEC  HEX    BIN
 ;     0 (0x00  0000 0000) かな    半英数
@@ -199,7 +206,7 @@ IME_SET(SetSts, WinTitle="A") {
 ;   戻り値          入力モード
 ;--------------------------------------------------------
 IME_GetConvMode(WinTitle="A") {
-    ControlGet,hwnd,HWND,,,%WinTitle%
+    ControlGet,hwnd,HWND,,,WinTitle
     if	(WinActive(WinTitle))	{
         ptrSize := !A_PtrSize ? 4 : A_PtrSize
         VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -221,7 +228,7 @@ IME_GetConvMode(WinTitle="A") {
 ;   戻り値          0:成功 / 0以外:失敗
 ;--------------------------------------------------------
 IME_SetConvMode(ConvMode,WinTitle="A") {
-    ControlGet,hwnd,HWND,,,%WinTitle%
+    ControlGet,hwnd,HWND,,,WinTitle
     if	(WinActive(WinTitle))	{
         ptrSize := !A_PtrSize ? 4 : A_PtrSize
         VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -236,7 +243,7 @@ IME_SetConvMode(ConvMode,WinTitle="A") {
         , Int, ConvMode) ;lParam  : CONVERSIONMODE
 }
 
-;===========================================================================
+;======================================
 ; IME 変換モード (ATOKはver.16で調査、バージョンで多少違うかも)
 
 ;   MS-IME  0:無変換 / 1:人名/地名                    / 8:一般    /16:話し言葉
@@ -252,7 +259,7 @@ IME_SetConvMode(ConvMode,WinTitle="A") {
 ;          WXG4             1:複合語  2:無変換 4:自動 8:連文節
 ;------------------------------------------------------------------
 IME_GetSentenceMode(WinTitle="A") {
-    ControlGet,hwnd,HWND,,,%WinTitle%
+    ControlGet,hwnd,HWND,,,WinTitle
     if	(WinActive(WinTitle))	{
         ptrSize := !A_PtrSize ? 4 : A_PtrSize
         VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -277,7 +284,7 @@ IME_GetSentenceMode(WinTitle="A") {
 ;   戻り値          0:成功 / 0以外:失敗
 ;-----------------------------------------------------------------
 IME_SetSentenceMode(SentenceMode,WinTitle="A") {
-    ControlGet,hwnd,HWND,,,%WinTitle%
+    ControlGet,hwnd,HWND,,,WinTitle
     if	(WinActive(WinTitle))	{
         ptrSize := !A_PtrSize ? 4 : A_PtrSize
         VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -295,7 +302,7 @@ IME_SetSentenceMode(SentenceMode,WinTitle="A") {
 ;---------------------------------------------------------------------------
 ;  IMEの種類を選ぶかもしれない関数
 
-;==========================================================================
+;=====================================
 ;  IME 文字入力の状態を返す
 ;  (パクリ元 : http://sites.google.com/site/agkh6mze/scripts#TOC-IME- )
 ;    標準対応IME : ATOK系 / MS-IME2002 2007 / WXG / SKKIME
@@ -312,7 +319,7 @@ IME_SetSentenceMode(SentenceMode,WinTitle="A") {
 ;      OFFにする必要がある
 ;      オプション-編集と日本語入力-編集中の文字列を文書に挿入モードで入力する
 ;      のチェックを外す
-;==========================================================================
+;=====================================
 IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
 
     ;IME毎の 入力窓/候補窓Class一覧 ("|" 区切りで適当に足してけばOK)
@@ -331,7 +338,7 @@ IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
         . "|SKKIME\d+\.*\d+UCand" ; SKKIME Unicode
     CandGCls := "GoogleJapaneseInputCandidateWindow" ;Google日本語入力
 
-    ControlGet,hwnd,HWND,,,%WinTitle%
+    ControlGet,hwnd,HWND,,,WinTitle
     if	(WinActive(WinTitle))	{
         ptrSize := !A_PtrSize ? 4 : A_PtrSize
         VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
@@ -340,38 +347,42 @@ IME_GetConverting(WinTitle="A",ConvCls="",CandCls="") {
             ? NumGet(stGTI,8+PtrSize,"UInt") : hwnd
     }
 
-    WinGet, pid, PID,% "ahk_id " hwnd
+    WinGet, pid, PID, "ahk_id " hwnd
     tmm:=A_TitleMatchMode
     SetTitleMatchMode, RegEx
     ret := WinExist("ahk_class " . CandCls . " ahk_pid " pid) ? 2
         : WinExist("ahk_class " . CandGCls ) ? 2
         : WinExist("ahk_class " . ConvCls . " ahk_pid " pid) ? 1
         : 0
-    SetTitleMatchMode, %tmm%
+    SetTitleMatchMode, tmm
     return ret
 }
 
 ; 上部メニューがアクティブになるのを抑制
-*~LAlt::Send {Blind}{vk07}
-*~RAlt::Send {Blind}{vk07}
+*~LAlt::Send "{Blind}{vk07}"
+*~RAlt::Send "{Blind}{vk07}"
 
 ; 左 Alt 空打ちで IME を OFF
 LAlt up::
-if (A_PriorHotkey == "*~LAlt")
-{
-    IME_SET(0)
-}
-Return
-
+    {
+        if (A_PriorHotkey = "*~LAlt")
+        {
+            IME_SET(0)
+        }
+        Return
+    }
 ; 右 Alt 空打ちで IME を ON
 RAlt up::
-if (A_PriorHotkey == "*~RAlt")
-{
-    IME_SET(1)
-}
-Return
-
+    {
+        if (A_PriorHotkey = "*~RAlt")
+        {
+            IME_SET(1)
+        }
+        Return
+    }
 ; PrtSc で IME を ON
 PrintScreen::
-    IME_SET(1)
-Return
+    {
+        IME_SET(1)
+        Return
+    }

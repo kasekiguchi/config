@@ -13,12 +13,11 @@
 ;   ・プライマリキーとセカンダリキーが同じ場合、A_ThisHotkeyに変化がないためtoggleをfalseにできない
 ;     現状はセカンダリキーの方で明示的にfalseにしている(例: vk1C+e->e)
 
-
 ; 修飾キー単体動作の定義////////////////////
 vk1C::Return
 
 ; プライマリキー////////////////////
-#If, GetKeyState("vk1C", "P") == true
+#If, GetKeyState("vk1C", "P") = true
   a::
   b::
   c::
@@ -60,9 +59,9 @@ vk1C::Return
 #If
 
 ; AutoHotkey
-#If, toggle == "a"
+#If, toggle = "a"
   ; コンパイラを開く
-  c::Run, %A_ScriptDir%/Compiler/Ahk2Exe.exe
+  c::Run, A_ScriptDir/Compiler/Ahk2Exe.exe
 
   ; Documentation
   d::Run, https://www.autohotkey.com/docs/AutoHotkey.htm
@@ -80,41 +79,41 @@ vk1C::Return
   r::Reload
 
   ; 実行ファイルのフォルダを開く
-  o::Run, %A_ScriptDir%
+  o::Run, A_ScriptDir
 
   ; Wiki(日本語)を開く
   h::Run, http://ahkwiki.net/Top
 
   ; WindowSpy
-  w::Run, %A_ScriptDir%\AutoHotkey.exe %A_ScriptDir%\WindowSpy.ahk
+  w::Run, A_ScriptDir\AutoHotkey.exe A_ScriptDir\WindowSpy.ahk
 
 ; (空き)
-#If, toggle == "b"
+#If, toggle = "b"
 ; (空き)
-#If, toggle == "c"
+#If, toggle = "c"
 ; (空き)
-#If, toggle == "d"
+#If, toggle = "d"
 ; 文字編集
-#If, toggle == "e"
+#If, toggle = "e"
   ; 1行コピー
-  c::Send, {Home}+{End}^c{Right}
+  c::Send, "{Home}+{End}^c{Right}"
 
   ; 1行削除
   e::
-    Send, {End}+{Home}{Delete}
+    Send, "{End}+{Home}{Delete}"
     Goto, toggle_deactivation
   Return
 
   ; 1行削除(キャレット～末尾)
-  Delete::Send, +{End}{Delete}
+  Delete::Send, "+{End}{Delete}"
 
   ; 1行削除(先頭～キャレット)
-  Backspace::Send, +{Home}{Backspace}
+  Backspace::Send, "+{Home}{Backspace}"
 
 ; (空き)
-#If, toggle == "f"
+#If, toggle = "f"
 ; GUI
-#If, toggle == "g"
+#If, toggle = "g"
   ; 4:DeepL
   d::
     ; 多重起動防止
@@ -122,32 +121,32 @@ vk1C::Return
       Return
     }
     stash := ClipboardAll
-    Clipboard :=
-    Send, ^c
+    Clipboard := ""
+    Send, "^c"
     ClipWait, 0.05
     clip := Clipboard
     Clipboard := stash
     clip := rm_crlf(clip)
     Gui, Add, Text, , 日本語→英語
     Gui, Add, Text, , (Shift)英語→日本語
-    Gui, Add, Edit, v_str_deepl w380, %clip%
+    Gui, Add, Edit, v_str_deepl w380, clip
     Gui, Add, Button, Default, Translate
     Gui, Show, Center w400, DeepL
-    Send, {vkF2}
+    Send, "{vkF2}"
     clip := ""
-    Return
-    ButtonTranslate:
-      Gui, Submit
-      ; Shift押下時はja->en
-      If GetKeyState("Shift", "P") {
-        Run, https://www.deepl.com/translator#ja/en/%_str_deepl%
+  Return
+  ButtonTranslate:
+    Gui, Submit
+    ; Shift押下時はja->en
+    If GetKeyState("Shift", "P") {
+      Run, https://www.deepl.com/translator#ja/en/_str_deepl
       ; 直打ちならばen->ja
-      } Else {
-        Run, https://www.deepl.com/translator#en/ja/%_str_deepl%
-      }
-    4GuiEscape:
-    4GuiClose:
-      Gui, Destroy
+    } Else {
+      Run, https://www.deepl.com/translator#en/ja/_str_deepl
+    }
+  4GuiEscape:
+  4GuiClose:
+    Gui, Destroy
   Return
 
   ; 3:新しいブランクファイルを作成
@@ -163,14 +162,14 @@ vk1C::Return
     Gui, Add, Edit, v_str_filename w380
     Gui, Add, Button, Default, Append
     Gui, Show, Center w400, ファイル名
-    Send, {vkF2}{vkF3}
-    Return
-    ButtonAppend:
+    Send, "{vkF2}{vkF3}"
+  Return
+  ButtonAppend:
     Gui, Submit
-    FileAppend, , %current_dir%\%_str_filename%
-    3GuiEscape:
-    3GuiClose:
-      Gui, Destroy
+    FileAppend, , current_dir\_str_filename
+  3GuiEscape:
+  3GuiClose:
+    Gui, Destroy
   Return
 
   ; 2:Google検索
@@ -182,24 +181,24 @@ vk1C::Return
       Return
     }
     stash := ClipboardAll
-    Clipboard :=
-    Send, ^c
+    Clipboard := ""
+    Send, "^c"
     ClipWait, 0.05
     clip := Clipboard
     Clipboard := stash
     clip := rm_crlf(clip)
-    Gui, Add, Edit, v_str_google w380, %clip%
+    Gui, Add, Edit, v_str_google w380, clip
     Gui, Add, Button, Default, Search
     Gui, Show, Center w400, Google
-    Send, {vkF2}
+    Send, "{vkF2}"
     clip := ""
-    Return
-    ButtonSearch:
-      Gui, Submit
-      Run, https://www.google.co.jp/search?q=%_str_google%
-    2GuiEscape:
-    2GuiClose:
-      Gui, Destroy
+  Return
+  ButtonSearch:
+    Gui, Submit
+    Run, https://www.google.co.jp/search?q=_str_google
+  2GuiEscape:
+  2GuiClose:
+    Gui, Destroy
   Return
 
   ; def:launcher
@@ -208,92 +207,91 @@ vk1C::Return
     If (WinExist("ahk_class AutoHotkeyGUI")) {
       Return
     }
-    launcher_head:
+  launcher_head:
     Gui, Add, Edit, v_str_launcher Lowercase
     Gui, Add, Button, Default, Launch
     Gui, Show, Center AutoSize, Launcher
-    Send, {vkF2}{vkF3}
-    Return
-    ButtonLaunch:
-      Gui, Submit
-      IniRead, val, %A_ScriptDir%\Plugins\launcher_data.ini, Scripts, %_str_launcher%
-      ; 一致するレコードがなければval="ERROR"となることを利用する
-      If (val != "ERROR") {
-        Run, %val%
-      } Else {
-        GoSub, GuiClose
-        Goto, launcher_head
-      }
-    GuiEscape:
-    GuiClose:
-      Gui, Destroy
+    Send, "{vkF2}{vkF3}"
+  Return
+  ButtonLaunch:
+    Gui, Submit
+    IniRead, val, A_ScriptDir\Plugins\launcher_data.ini, Scripts, _str_launcher
+    ; 一致するレコードがなければval="ERROR"となることを利用する
+    If (val != "ERROR") {
+      Run, val
+    } Else {
+      GoSub, GuiClose
+      Goto, launcher_head
+    }
+  GuiEscape:
+  GuiClose:
+    Gui, Destroy
   Return
 
 ; (空き)
-#If, toggle == "h"
+#If, toggle = "h"
 ; (空き)
-#If, toggle == "i"
+#If, toggle = "i"
 ; (空き)
-#If, toggle == "j"
+#If, toggle = "j"
 ; (空き)
-#If, toggle == "k"
+#If, toggle = "k"
 ; (空き)
-#If, toggle == "l"
+#If, toggle = "l"
 ; (空き)
-#If, toggle == "m"
+#If, toggle = "m"
 ; (空き)
-#If, toggle == "n"
+#If, toggle = "n"
 ; (空き)
-#If, toggle == "o"
+#If, toggle = "o"
 ; プログラミング
-#If, toggle == "p"
+#If, toggle = "p"
   ; C言語コンパイル
-  c::Send, {vkF2}{vkF3}gcc -o a .c{Left 2}
+  c::Send, "{vkF2}{vkF3}gcc -o a .c{Left 2}"
 
   ; Javaコンパイル
-  j::Send, {vkF2}{vkF3}javac -encoding utf-8 .java{Left 5}
+  j::Send, "{vkF2}{vkF3}javac -encoding utf-8 .java{Left 5}"
 
   ; カレントディレクトリ(フォルダ)でVSCode起動
   v::
-    Send, ^l
-    Send, code{Space}.
-    Send, {Enter}
+    Send, "^l"
+    Send, "code{Space}."
+    Send, "{Enter}"
   Return
 
 ; (空き)
-#If, toggle == "q"
+#If, toggle = "q"
 ; (空き)
-#If, toggle == "r"
+#If, toggle = "r"
 ; (空き)
-#If, toggle == "s"
+#If, toggle = "s"
 ; (空き)
-#If, toggle == "t"
+#If, toggle = "t"
 ; (空き)
-#If, toggle == "u"
+#If, toggle = "u"
 ; (空き)
-#If, toggle == "v"
+#If, toggle = "v"
 ; (空き)
-#If, toggle == "w"
+#If, toggle = "w"
 ; (空き)
-#If, toggle == "x"
+#If, toggle = "x"
 ; (空き)
-#If, toggle == "y"
+#If, toggle = "y"
 ; (空き)
-#If, toggle == "z"
+#If, toggle = "z"
 #If
-
 
 ; サブルーチン////////////////////
 ; セカンダリキー入力待ちにし、タイムアウトをSetTimerする
 toggle_activation(toggle) {
   time_limitation := 2000
-  SetTimer, toggle_deactivation, -%time_limitation%
+  SetTimer, toggle_deactivation, -time_limitation
   my_tooltip_function("vk1C + " . toggle . " -> ?", time_limitation)
 }
 
 toggle_deactivation:
   toggle := false
-  my_tooltip_function("toggle == false", 1000)
+  my_tooltip_function("toggle = false", 1000)
   hotkeys_define(keys_all, "disable_keys", "Off")
   SetTimer, toggle_deactivation, Off
   SetTimer, watch_hotkey_done, Off

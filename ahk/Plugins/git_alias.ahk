@@ -31,7 +31,7 @@
 ; 応用
 ::gishbr::git show-branch | grep '*'
 ; :R:gishbr::git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}'
-::gigr::git log --graph --date=short --decorate=short --pretty=format:'%Cgreen%h %Creset%cd %Cblue%cn %Cred%d %Creset%s'
+::gigr::git log --graph --date=short --decorate=short --pretty=format:'Cgreenh Cresetcd Cbluecn Credd Cresets'
 
 ; Hugo(一時保存場所)
 ::hsv::hugo server --ignoreCache -D

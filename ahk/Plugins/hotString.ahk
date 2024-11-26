@@ -6,9 +6,12 @@
 
 ; 一般
 ::teststring::
-  Send, It's test.
-Return
-
+  {
+    Send, "It's test."
+    Return
+  }
 ::192::
-  Send, 192.168.1.
-Return
+  {
+    Send, "192.168.100."
+    Return
+  }
