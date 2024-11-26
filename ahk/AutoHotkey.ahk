@@ -2,13 +2,13 @@
 ;#SingleInstance, Force
 ;#NoEnv
 #UseHook
-InstallKeybdHook
-InstallMouseHook
-;HotkeyInterval(2000)
-;MaxHotkeysPerInterval(200)
-;Process(), Priority(), Realtime()
-SendMode "Input"
-SetWorkingDir A_ScriptDir
+InstallKeybdHook()
+InstallMouseHook()
+A_HotkeyInterval := 2000
+A_MaxHotkeysPerInterval := 200
+ProcessSetPriority("Realtime")
+SendMode("Input")
+SetWorkingDir(A_ScriptDir)
 ;SetTitleMatchMode, 2
 ; SetKeyDelay, , 10
 
@@ -16,7 +16,7 @@ SetWorkingDir A_ScriptDir
 #Include "Variables.ahk"
 
 ; メニューアイコン設定
-;Menu(Tray, Icon, icon.ico)
+TraySetIcon("icon.ico")
 
 ; プラグインの検出・取り込み
 ;If (search_plugins()) {
@@ -26,7 +26,7 @@ SetWorkingDir A_ScriptDir
 search_plugins() {
   ; Pluginsフォルダ内のAHKスクリプト名を整形してplugin_filesに格納
   plugin_files := ""
-  loop ("Plugins\*.ahk") {
+  loop files, A_ScriptDir "\Plugins\*.ahk" {
     plugin_files .= "#" . "Include *i \Plugins\" . A_LoopFileName . "`n"
   }
   if (plugin_files = "") {
@@ -54,11 +54,12 @@ search_plugins() {
 ; 練習用キー無効化
 hotkeys_define(keys_practice, "keys_practice", "On")
 keys_practice:
-  count++
-  if (count > 1)
-    my_tooltip_function("そのキーは禁止です(" . count - 1 . "回目)", 1000)
-  return
-
+  {
+    count++
+    if (count > 1)
+      my_tooltip_function("そのキーは禁止です(" . count - 1 . "回目)", 1000)
+    return
+  }
   ; (AutoExexuteここまで)
 
   #Include ".\PluginList.ahk"
@@ -67,24 +68,28 @@ keys_practice:
   ; ツールチップ
   my_tooltip_function(str, delay) {
     ToolTip(str)
-    SetTimer remove_tooltip, -delay
+    SetTimer(remove_tooltip, -%delay%)
   }
 
-remove_tooltip:
-  ToolTip
-  return
+  remove_tooltip() { ; V1toV2: Added bracket
+    global ; V1toV2: Made function global
+    ToolTip()
+    return
+  }
 
 remove_tooltip_all:
-  SetTimer remove_tooltip, Off
-  loop (20)
-    ToolTip(, , , , A_Index)
-  return
+  {
+    SetTimer(remove_tooltip, 0)
+    loop 20
+      ToolTip(, , , A_Index)
+    return
+  }
 
   ;カレントディレクトリ取得
   get_current_dir() {
     explorerHwnd := WinActive("ahk_class CabinetWClass")
     if (explorerHwnd) {
-      for window in ComObjCreate("Shell.Application").Windows {
+      for window in ComObject("Shell.Application").Windows {
         if (window.hwnd == explorerHwnd)
           return window.Document.Folder.Self.Path
       }
@@ -93,7 +98,7 @@ remove_tooltip_all:
 
   ; ループでホットキー定義
   hotkeys_define(keys, label, OnOff) {
-    loop (PARSE, keys)
+    loop parse, keys, ","
       Hotkey(A_LoopField, label, OnOff)
     return
   }
