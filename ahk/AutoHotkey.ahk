@@ -53,9 +53,10 @@ search_plugins() {
 
 ; 練習用キー無効化
 hotkeys_define(keys_practice, "keys_practice", "On")
+count := 0
 keys_practice:
   {
-    count++
+    count := count + 1
     if (count > 1)
       my_tooltip_function("そのキーは禁止です(" . count - 1 . "回目)", 1000)
     return
