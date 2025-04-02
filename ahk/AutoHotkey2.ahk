@@ -2,6 +2,8 @@
 ; thanks to chatgpt and
 ; https://github.com/ryobeam/alt-ime-ahk-v2f/blob/master/IMEv2.ahk
 
+#SingleInstance
+
 SendMode("Input")
 SetWorkingDir(A_ScriptDir)
 ;SetTitleMatchMode("2")

@@ -21,8 +21,8 @@ AppsKey & Left:: Send "{Volume_Mute}"
 
 ;; 上書き保存したらツールチップ表示
 !s:: {
-  Send "^s"
-  my_tooltip_function("上書き保存", 300)
+    Send "^s"
+    my_tooltip_function("上書き保存", 300)
 }
 
 ;; タイムシフト録画したら保存フォルダを開く（コメントアウト）
@@ -36,6 +36,6 @@ AppsKey & Left:: Send "{Volume_Mute}"
 
 ;; 日付入力
 ^vkBB:: {
-  dateStr := FormatTime(, "yyyy-MM-dd")
-  Send "{vkF2}{vkF3}" dateStr
+    dateStr := FormatTime(, "yyyy-MM-dd")
+    Send "{vkF2}{vkF3}" dateStr
 }
