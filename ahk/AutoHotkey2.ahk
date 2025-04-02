@@ -1,4 +1,6 @@
-#SingleInstance
+; v2 対応版
+; thanks to chatgpt and
+; https://github.com/ryobeam/alt-ime-ahk-v2f/blob/master/IMEv2.ahk
 
 SendMode("Input")
 SetWorkingDir(A_ScriptDir)
