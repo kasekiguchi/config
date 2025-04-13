@@ -1,15 +1,8 @@
 ﻿; コメントアウトされたものはそのまま
-;#Include Plugins2\brackets.ahk
 #Include Plugins2\my-edit.ahk
-;#Include Plugins2\fn.ahk
-#Include Plugins2\git_alias.ahk
-;#Include Plugins2\hotString.ahk
+#Include Plugins2\hotString.ahk
 #Include Plugins2\alt-ime-ahk-v2f.ahk
-;#Include Plugins2\keybd_mouse.ahk
 #Include Plugins2\main.ahk
-;#Include Plugins2\numpad.ahk
-;#Include Plugins2\others.ahk
-;#Include Plugins2\temp.ahk
 ;#Include Plugins2\toggle.ahk
 #Include Plugins2\my-keybind.ahk
 #Include Plugins2\my-launcher.ahk

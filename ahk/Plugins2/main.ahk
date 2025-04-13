@@ -2,7 +2,7 @@
 vkF0:: return
 
 ;; デスクトップフォルダを開く
-#e:: Run A_Desktop
+; #e:: Run A_Desktop
 
 ;; 音量変更
 AppsKey:: Send "{AppsKey}"
@@ -16,9 +16,6 @@ AppsKey & Down:: Send "{Volume_Down 1}"
 ;; ミュート
 AppsKey & Left:: Send "{Volume_Mute}"
 
-;; コピーしたらツールチップを表示
-; OnClipboardChange(my_tooltip_function.bind("コピー", 300))
-
 ;; 上書き保存したらツールチップ表示
 !s:: {
     Send "^s"
@@ -31,8 +28,11 @@ AppsKey & Left:: Send "{Volume_Mute}"
 ;; 録画の保存フォルダを開く（コメントアウト）
 ;^!F10::Run "D:\\Videos\\GeforceExperience"
 
-;; カレントディレクトリのパスを取得
-^+!p:: Clipboard := get_current_dir()
+;; Explorerでカレントディレクトリのパスを取得
+^+!p:: {
+    A_Clipboard := get_current_dir()
+    my_tooltip_function("パスコピー", 300)
+}
 
 ;; 日付入力
 ^vkBB:: {

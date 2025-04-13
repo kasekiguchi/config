@@ -7,6 +7,7 @@
 ; ! Alt
 ; # Windows
 ; + Shift
+^!#+:: aux_reset()
 
 kill_line() {
     Send("+{End}")
@@ -37,7 +38,7 @@ move_tab(dir) {
 }
 
 ; 特殊文字関連のキーバインド
-^:: {
+^\:: {
     if (WinActive("ahk_class SunAwtFrame")) {
         Send("^+m")
     } else {
@@ -85,7 +86,10 @@ move_tab(dir) {
 ; アルファベット関連のキーバインド
 !a:: Send("^a")
 ^a:: Send("{Home}")
-!c:: Send("^c")
+!c:: {
+    Send "^c"
+    my_tooltip_function("コピー", 300)
+}
 ^d:: Send("{Del}")
 !d:: Send("{Del}")
 ^e:: Send("{End}")

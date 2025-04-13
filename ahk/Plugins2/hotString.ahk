@@ -1,14 +1,13 @@
-﻿#Hotstring C O Z
+﻿;#Hotstring C O Z
 ; C: 大文字小文字を区別する
 ; O : 最後に終了文字を入力しない
 ; Z : 発動時点でキー入力のバッファをクリアする
 ; R : 特殊キーをそのまま入力する(個別設定)
+; オプション設定（C=大文字小文字区別, O=末尾文字を無視, Z=末尾にあるときだけ）
+;HotstringOptions("COZ")
 
-; 一般
-::teststring::
-  Send, It's test.
-Return
+; "::ttt" を入力すると "It's test." を入力する
+Hotstring("::ttt", (*) => SendText("It's test."))
 
-::192::
-  Send, 192.168.1.
-Return
+; "::192" を入力すると "192.168." を入力する
+Hotstring("::192", (*) => SendText("192.168."))

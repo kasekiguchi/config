@@ -12,45 +12,6 @@ SetWorkingDir(A_ScriptDir)
 ; 変数の初期化
 #Include Variables2.ahk
 
-; メニューアイコン設定
-; MenuSetIcon("Tray", "icon.ico")
-
-; search_plugins() {
-;   ; Plugins2フォルダ内のAHKスクリプト名を整形して plugin_files に格納
-;   plugin_files := ""
-;   for file in FileOpenDir(A_ScriptDir "\Plugins2") {
-;     plugin_files .= "#Include " . file.FullPath . "`n"
-;   }
-;   if (plugin_files == "") {
-;     return false
-;   }
-
-;   ; Plugins の変更点を認識
-;   try {
-;     file := FileOpen(A_ScriptDir "\PluginList2.ahk", "r", "UTF-8")
-;     plugin_list_old := file.Read()
-;     file.Close()
-;     if (plugin_list_old == plugin_files) {
-;       return false
-;     }
-;   } catch {
-;     MsgBox("エラー: プラグインリストの読み込み中に問題が発生しました。")
-;   }
-
-;   ; plugin_list_oldをplugin_filesに書き換える
-;   try {
-;     file := FileOpen(A_ScriptDir "\PluginList2.ahk", "w", "UTF-8")
-;     file.Write(plugin_files)
-;     file.Close()
-;   } catch {
-;     MsgBox("エラー: プラグインリストの書き込み中に問題が発生しました。")
-;     return false
-;   }
-
-;   return true
-; }
-; ファイルが存在しない場合は無視
-
 ; 練習用キー無効化
 ; hotkeys_define(keys_practice, "keys_practice", true)
 ; keys_practice() {
@@ -94,8 +55,8 @@ hotkeys_define(keys, label, onOff) {
   }
 }
 
-rm_crlf(str) {
-  str := StrReplace(str, "`n")
-  str := StrReplace(str, "`r")
-  return str
-}
+; rm_crlf(str) {
+;     str := StrReplace(str, "`n")
+;     str := StrReplace(str, "`r")
+;     return str
+; }
