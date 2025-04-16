@@ -2,7 +2,9 @@
 ; thanks to chatgpt and
 ; https://github.com/ryobeam/alt-ime-ahk-v2f/blob/master/IMEv2.ahk
 
-#SingleInstance
+#SingleInstance Force
+; プロセス優先度
+ProcessSetPriority("Realtime")
 
 SendMode("Input")
 SetWorkingDir(A_ScriptDir)

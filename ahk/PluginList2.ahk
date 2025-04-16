@@ -6,3 +6,4 @@
 ;#Include Plugins2\toggle.ahk
 #Include Plugins2\my-keybind.ahk
 #Include Plugins2\my-launcher.ahk
+; #Include Plugins2\keyboard_mouse.ahk
