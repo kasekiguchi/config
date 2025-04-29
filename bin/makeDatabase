@@ -2,8 +2,6 @@
 # preamble
 ODHOME=~/Documents/GitHub/config/bin
 source $ODHOME/zsh/zsh_alias
-#ODHOME=~/OneDrive\ -\ tcu.ac.jp
-#source $ODHOME/Setting/zsh/zsh_alias
 
 if [ $# -le 3 ]; then
 	redecho "Make sure arguments"
@@ -48,7 +46,7 @@ else
 	if [ ! -e $argv[4] ]; then # $argv[4]というファイルが存在するか判別
 		# 存在しない場合
 		# ただの数字の場合 スキップする行数を表す．
-		# verticalの場合，各行が mysql_column_name, 値 という形をしている
+		# verticalの場合，各行が mariadb_column_name, 値 という形をしている
 		echo $argv[4] >rm-template.csv
 		template=$pwd/rm-template.csv
 		template=rm-template.csv
@@ -70,17 +68,18 @@ else
 			sql=$targ
 		fi
 		echo "レコード削除"
-		mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "truncate table $table;"
+		mariadb --defaults-extra-file=~/.ssh/mariadb.pass $db -u root -e "truncate table $table;"
 
 		echo "テーブル削除"
-		mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "drop table $table;"
+		mariadb --defaults-extra-file=~/.ssh/mariadb.pass $db -u root -e "drop table $table;"
 
 		echo "新規テーブル作成"
-		mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi <$sql
+		mariadb --defaults-extra-file=~/.ssh/mariadb.pass $db -u root <$sql
 		# }}}
 		fi
 	fi
 
+	sed -i 's/\r$//' $template
 	if [[ $(cat $template) =~ ^[0-9]+$ ]]; then
 		skip=$(cat $template)
 		echo "skip" $skip
@@ -89,7 +88,7 @@ else
 			keys=$(cut -d ',' -f 1 $template | perl -p -e "s/\n/,/g" | sed -e "s/,$//")
 			rows=($(cut -d ',' -f 2 $template | perl -p -e "s/\n/ /g"))
 			cols=($(cut -d ',' -f 3 $template | perl -p -e "s/\n/ /g"))
-			# keys : mysql key names,  (rows, cols) : set of (row, col) of excel file
+			# keys : mariadb key names,  (rows, cols) : set of (row, col) of excel file
 		fi
 	####		keys="application_name",$keys
 	fi
@@ -109,6 +108,7 @@ else
 		echo "Processing : " $tmp
 		# 例外処理
 
+		sed -i 's/\r$//' $tmp
 		# \cite などの\を消す
 		perl -i".bak" -pe "s/\\\\\\\\/<br>/g;s/\\\\cite\{.*\}//g" $tmp
 		if ! diff $tmp.bak $tmp >/dev/null; then
@@ -171,7 +171,6 @@ else
 				tmp2=${tmp2%%<br-tmp>*}"<br>"${tmp2#*<br-tmp>} # 奇数の場合""で囲まれた<br-tmp>なので<br>として残す
 			fi
 		done
-
 		# 		# aaa"bbb"ccc<br>ddd"eee"fff には対応していない
 		perl -i".bak" -pe 's/^([^"]*)<br>/\1\n/g;s/<br>([^"]*)$/\n\1/g;s/\"<br>/\"\n/g' $tmp.csv
 		while ! diff $tmp.csv.bak $tmp.csv >/dev/null; do
@@ -188,17 +187,17 @@ else
 			perl -i -pe "s/\"//g;s/,/\t/g;s/<comma>/,/g;s/^\s*$//g" $tmp.csv
 			wc $tmp.csv
 			#				cat $tmp.csv
-			# 				echo "mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass  $db -u sekiguchi -e \"load data local infile '$tmp.csv' into table $table lines terminated by '\n' ignore $skip lines;\""
+			# 				echo "mariadb --defaults-extra-file=~/.ssh/mariadb.pass  $db -u root -e \"load data local infile '$tmp.csv' into table $table lines terminated by '\n' ignore $skip lines;\""
 
 			echo "load data local infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
 
-			mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "load data local infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
+			mariadb --defaults-extra-file=~/.ssh/mariadb.pass $db -u root -e "load data local infile '$tmp.csv' replace into table $table lines terminated by '\n' ignore $skip lines;"
 		else
 			if [ "vertical" = "$(cat $template)" ]; then
 				keys=$(cut -d ',' -f 1 $tmp.csv | perl -p -e "s/\n/,/g" | sed -e "s/,$//")
 				values=$(cut -d ',' -f 2 $tmp.csv | perl -p -e "s/^/\"/g" | perl -p -e "s/\n/\",/g" | perl -p -e "s/\"\"/\"/g" | sed -e "s/,$//")
-				#						echo  "mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass  $db -u sekiguchi -e \"replace into $table ($keys) values ($values);\""
-				mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "replace into $table ($keys) values ($values);"
+				#						echo  "mariadb --defaults-extra-file=~/.ssh/mariadb.pass  $db -u root -e \"replace into $table ($keys) values ($values);\""
+				mariadb --defaults-extra-file=~/.ssh/mariadb.pass $db -u root -e "replace into $table ($keys) values ($values);"
 			else
 				values=""
 				\cp $tmp.csv $tmp.org
@@ -213,7 +212,7 @@ else
 				####  				else
 				####  						values=\"\",$values
 				####  				fi
-				mysql --defaults-extra-file=/home/sekiguchi/.ssh/mysql.pass $db -u sekiguchi -e "replace into $table ($keys) values ($values);"
+				mariadb --defaults-extra-file=~/.ssh/mariadb.pass $db -u root -e "replace into $table ($keys) values ($values);"
 			fi
 		fi
 	fi

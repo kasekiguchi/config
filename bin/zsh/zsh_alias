@@ -109,7 +109,7 @@ alias -- fujita='ssh 192.168.60.162'
 #alias -- exit='sclicenseExit'
 
 # > colorecho hoge waya  ==> hoge : colored,  waya : default color
-redecho() {echo "[01;31m$1[22;24;37;49m" $2}
+redecho(){echo "[01;31m$1[22;24;37;49m" $2}
 blueecho(){echo "[01;36m$1[22;24;37;49m" $2}
 greenecho(){echo "[01;32m$1[22;24;37;49m" $2}
 # cecho = checked echo : if CECHO is defined then cecho is almost the same "echo"
@@ -141,9 +141,9 @@ sclicenseExit () {
 sclicense () {
     ssh -Y sclicense@192.168.60.150 -t "if [ ! -d ~/dazai/$USER ] ; then mkdir ~/dazai/$USER; fi ; sshfs $USER@192.168.60.1:/home/dazai/$USER ~/dazai/$USER;export hostUSER=$USER;/opt/local/bin/zsh"
 }
-if [ $USER = sclicense ]; then 
-    alias -- zsh='echo "Sorry you are not allowed to open new shell"'
-fi
+# if [ $USER = sclicense ]; then 
+#     alias -- zsh='echo "Sorry you are not allowed to open new shell"'
+# fi
 
 
 #  matlab () {
