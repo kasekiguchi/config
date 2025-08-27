@@ -25,7 +25,7 @@ a = home
 e = end
 d = delete
 h = backspace
-k = S-end delete
+#k = S-end delete
 # 行末選択→削除（多くのアプリで「行末まで削除」風）
 g = esc
 
