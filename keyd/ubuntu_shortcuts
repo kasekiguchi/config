@@ -1,0 +1,54 @@
+[ids]
+*   # すべてのキーボードに適用。必要なら vendor:product を列挙
+
+[global]
+# タップ判定。短めが好みなら 150〜200ms あたりを調整
+overload_tap_timeout = 200
+
+[main]
+# 左Alt：タップで Super+F13 を送出、ホールドで Alt として機能
+leftalt  = overloadt2(alt,   macro(M-f13), 200)
+# 右Alt：タップで Super+F14 を送出、ホールドで Alt として機能
+# ※多くの配列で rightalt は altgr だが、Emacs の Meta として使いやすいよう alt に寄せる
+rightalt = overloadt2(alt,   macro(M-f14), 200)
+
+# （お好み）Caps を Ctrl のワンショットに
+capslock = oneshot(control)
+
+# --- Emacs 風ナビゲーション（システム全体） ---
+# Control 層：C-b/f/p/n で矢印、C-a/e で Home/End、C-d で Delete、C-k で行末まで削除
+[control:C]
+q = up
+z = down
+a = home
+e = end
+d = delete
+h = backspace
+k = S-end delete       # 行末選択→削除（多くのアプリで「行末まで削除」風）
+g = esc
+
+# Alt 層：M-b/f で単語単位、M-d で単語削除（前方）
+[alt:A]
+x = C-x
+c = C-c
+v = C-v
+
+# Alt 層：M-b/f で単語単位、M-d で単語削除（前方）
+[middlemouse:M]
+h = left
+j = down
+k = up
+l = right
+
+[control-alt]
+j = C-pageup
+l = C-pagedown
+
+# （任意）Shift 付きで選択移動したい場合
+# [control+shift]
+# b = S-left
+# f = S-right
+# p = S-up
+# n = S-down
+# a = S-home
+# e = S-end

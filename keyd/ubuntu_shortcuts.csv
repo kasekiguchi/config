@@ -1,0 +1,7 @@
+# name, command, binding
+Open terminal, gnome-terminal, C-A-k
+Open VSCode, code, C-A-e
+Open Files, nautilus, Super-e
+Open Firefox, firefox, C-A-s
+IME: English (US), ibus engine xkb:us::eng, Super-F13
+IME: Japanese (Mozc), ibus engine mozc-jp, Super-F14

@@ -28,7 +28,6 @@ Tray.Add()
 Tray.Delete()
 Tray.AddStandard()
 return
-
 AppName(A_ThisMenuItem, A_ThisMenuItemPos, MyMenu) {
   return
 }
@@ -174,7 +173,13 @@ RAlt up::
 #HotIf
 
 ; CapsLock 無効化
-CapsLock:: return
+;CapsLock:: return
+; $CapsLock::
+; {
+;   Send("{Ctrl down}")
+;   KeyWait("CapsLock")
+;   Send("{Ctrl up}") 
+; }
 
 #f::
 {
