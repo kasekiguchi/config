@@ -80,7 +80,7 @@ normalize_binding() {
     case "$lp" in
       c|ctrl|control) mods+=("<Ctrl>") ;;
       a|alt)          mods+=("<Alt>") ;;
-      s|shift)        mods+=("<Shift>") ;;
+      S|shift)        mods+=("<Shift>") ;;
       super|win|meta|m) mods+=("<Super>") ;;
       *)
         # キー本体
@@ -130,7 +130,7 @@ while IFS= read -r line || [[ -n "$line" ]]; do
     continue
   fi
 
-  keypath="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom${next_id}/"
+  keypath="/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom${next_id}-$name/"
   schema_kb="$SCHEMA.custom-keybinding:$keypath"
 
   echo "Register: [$name] -> [$command] @ [$norm_binding]"

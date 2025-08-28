@@ -1,5 +1,9 @@
 ## 使い方
 ```bash
+sudo systemctl restart keyd
+
+```
+```bash
 sudo systemctl stop keyd
 sudo keyd -c ./ubuntu_shortcuts
 ```

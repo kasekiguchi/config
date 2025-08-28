@@ -1,7 +1,8 @@
-# name, command, binding
-Open terminal, gnome-terminal, C-A-k
-Open VSCode, code, C-A-e
-Open Files, nautilus, Super-e
-Open Firefox, firefox, C-A-s
-IME: English (US), ibus engine xkb:us::eng, Super-F13
-IME: Japanese (Mozc), ibus engine mozc-jp, Super-F14
+#name,command,binding
+OpenTerminal,gnome-terminal,C-A-k
+OpenVSCode,code,C-A-e
+OpenFiles,nautilus,Super-e
+OpenFirefox,firefox,C-A-s
+IBusRestart,/home/sekiguchi/Documents/GitHub/config/keyd/ibus-restart.sh,Super-F12
+#IME:English(US),ibus engine xkb:us::eng,Meta-F13
+#IME:Japanese(Mozc),ibus engine mozc-jp,Meta-F14
