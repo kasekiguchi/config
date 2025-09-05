@@ -4,14 +4,14 @@
 
 [global]
 # タップ判定。短めが好みなら 150〜200ms あたりを調整
-overload_tap_timeout = 200
+overload_tap_timeout = 100
 
 [main]
 # 左Alt：タップで Super+F13 を送出、ホールドで Alt として機能
-leftalt  = overloadt2(alt,  macro(M-f12), 200)
+leftalt  = overloadt2(alt,  macro(M-f12), 100)
 # 右Alt：タップで Super+F14 を送出、ホールドで Alt として機能
 # ※多くの配列で rightalt は altgr だが、Emacs の Meta として使いやすいよう alt に寄せる
-rightalt = overloadt2(alt,  hiragana, 200)
+rightalt = overloadt2(alt,  hiragana, 100)
 
 # （お好み）Caps を Ctrl のワンショットに
 capslock = oneshot(control)
@@ -31,9 +31,12 @@ g = esc
 
 # Alt 層：M-b/f で単語単位、M-d で単語削除（前方）
 [alt:A]
+s = C-s
 x = C-x
 c = C-c
 v = C-v
+a = C-a
+z = C-z
 
 # Alt 層：M-b/f で単語単位、M-d で単語削除（前方）
 [middlemouse:M]
